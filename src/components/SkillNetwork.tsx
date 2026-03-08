@@ -3,27 +3,30 @@
 export default function SkillNetwork() {
 
   return (
-    <section className="relative py-40 px-8 text-white">
+
+    <section id="about" className="relative py-40 px-8 text-white">
 
       <div className="max-w-6xl mx-auto">
 
-        {/* HEADER */}
+        {/* ABOUT HEADER */}
 
         <div className="text-center mb-24">
 
           <h2 className="text-5xl md:text-6xl font-bold tracking-tight">
-            About Me
+            About
           </h2>
 
-          <p className="mt-6 text-xl text-gray-400 max-w-3xl mx-auto">
-            I design intelligent systems that combine data infrastructure,
-            automation, and AI-driven decision frameworks to transform complex
-            information into actionable insight.
+          <p className="mt-8 text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
+            I design intelligent systems that turn complex data into decisions.
+            My work sits at the intersection of <span className="text-white">data infrastructure</span>,
+            <span className="text-white"> AI systems</span>, and
+            <span className="text-white"> automation</span> — building tools that help organizations
+            understand information, simulate outcomes, and make better decisions.
           </p>
 
         </div>
 
-        {/* CARDS */}
+        {/* CAPABILITY CARDS */}
 
         <div className="grid md:grid-cols-3 gap-8">
 
@@ -35,7 +38,7 @@ export default function SkillNetwork() {
 
             <p className="mt-4 text-gray-400 leading-relaxed">
               Designing systems where data pipelines, models and automation
-              interact to generate insights and decisions.
+              interact to generate insights and decisions at scale.
             </p>
 
           </div>
@@ -48,7 +51,7 @@ export default function SkillNetwork() {
 
             <p className="mt-4 text-gray-400 leading-relaxed">
               Building scalable SQL-driven data layers that transform complex
-              datasets into decision-ready signals.
+              datasets into decision-ready signals and analytics systems.
             </p>
 
           </div>
@@ -60,8 +63,8 @@ export default function SkillNetwork() {
             </h3>
 
             <p className="mt-4 text-gray-400 leading-relaxed">
-              Creating AI-powered systems that simulate outcomes, analyze
-              inputs, and support smarter decisions.
+              Creating AI-powered tools that simulate outcomes, analyze
+              inputs, and support faster and smarter decisions.
             </p>
 
           </div>
@@ -71,5 +74,7 @@ export default function SkillNetwork() {
       </div>
 
     </section>
+
   )
+
 }

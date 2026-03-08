@@ -115,7 +115,7 @@ export default function ProjectGalaxy() {
   ]
 
   return (
-    <section className="h-screen w-full flex items-center justify-center text-white relative">
+    <section id="galaxy" className="h-screen w-full flex items-center justify-center text-white relative">
 
       {activeProject && (
 

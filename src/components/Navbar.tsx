@@ -16,23 +16,27 @@ export default function Navbar() {
           ALOK AI LAB
         </span>
 
-        <a className="hover:text-blue-400 transition cursor-pointer">
-          Lab
-        </a>
-
-        <a className="hover:text-blue-400 transition cursor-pointer">
-          Projects
-        </a>
-
-        <a className="hover:text-blue-400 transition cursor-pointer">
+        <a href="#about" className="hover:text-blue-400 transition">
           About
         </a>
 
-        <a className="hover:text-blue-400 transition cursor-pointer">
-          Resume
+        <a href="#timeline" className="hover:text-blue-400 transition">
+          Journey
         </a>
 
-        <a className="hover:text-blue-400 transition cursor-pointer">
+        <a href="#projects" className="hover:text-blue-400 transition">
+          Projects
+        </a>
+
+        <a href="#galaxy" className="hover:text-blue-400 transition">
+          Galaxy
+        </a>
+
+        <a href="#systems" className="hover:text-blue-400 transition">
+          Systems
+        </a>
+
+        <a href="#contact" className="hover:text-blue-400 transition">
           Contact
         </a>
 

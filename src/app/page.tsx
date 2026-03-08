@@ -7,6 +7,10 @@ import CursorGlow from "@/components/CursorGlow"
 import SkillNetwork from "@/components/SkillNetwork"
 import { TypeAnimation } from 'react-type-animation'
 import ProjectGalaxy from "@/components/ProjectGalaxy"
+import CareerTimeline from "@/components/CareerTimeline"
+import FeaturedProjects from "@/components/FeaturedProjects"
+import SystemsThinking from "@/components/SystemsThinking"
+import ContactSection from "@/components/ContactSection"
 
 export default function Home() {
   return (
@@ -80,8 +84,11 @@ export default function Home() {
       {/* SKILL NETWORK SECTION */}
 
       <SkillNetwork />
-      
+      <CareerTimeline />
+      <FeaturedProjects />
       <ProjectGalaxy />
+      <SystemsThinking />
+      <ContactSection />
 
     </main>
   )
