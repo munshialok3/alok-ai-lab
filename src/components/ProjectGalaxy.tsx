@@ -4,12 +4,10 @@ import { Canvas, useFrame } from '@react-three/fiber'
 import { useRef, useState } from 'react'
 import * as THREE from 'three'
 
-import Comet from "@/components/Comet"
 import Nebula from "@/components/Nebula"
 import NeuralBeam from "@/components/NeuralBeam"
 import GalaxyCamera from "@/components/GalaxyCamera"
 import Starfield from "@/components/Starfield"
-import AICore from "@/components/AICore"
 
 function Orbit({ radius }: { radius: number }) {
 
@@ -50,18 +48,14 @@ function Planet({ radius, speed, size, color, project, setActive }: any) {
 
     const t = clock.getElapsedTime()
 
-    if (group.current) {
-      group.current.rotation.y = t * speed
-    }
+    if (group.current) group.current.rotation.y = t * speed
 
     if (mesh.current) {
       mesh.current.rotation.y += 0.01
       mesh.current.scale.setScalar(hovered ? 1.35 : 1)
     }
 
-    if (atmosphere.current) {
-      atmosphere.current.rotation.y += 0.002
-    }
+    if (atmosphere.current) atmosphere.current.rotation.y += 0.002
 
   })
 
@@ -160,41 +154,16 @@ export default function ProjectGalaxy() {
 
         <GalaxyCamera />
 
-        {/* Atmosphere */}
-
         <fog attach="fog" args={['#020617', 20, 120]} />
-
-        {/* Lighting */}
 
         <ambientLight intensity={0.3} />
 
-        <directionalLight
-          position={[8, 10, 5]}
-          intensity={2}
-        />
+        <directionalLight position={[8, 10, 5]} intensity={2} />
 
-        <pointLight
-          position={[0, 0, 0]}
-          intensity={3}
-          color="#4f9cff"
-        />
-
-        {/* Background */}
+        <pointLight position={[0, 0, 0]} intensity={3} color="#4f9cff" />
 
         <Nebula />
         <Starfield />
-
-        {/* AI Core */}
-
-        <AICore />
-
-        {/* Comets */}
-
-        <Comet />
-        <Comet />
-        <Comet />
-
-        {/* Orbits */}
 
         <Orbit radius={4} />
         <Orbit radius={7} />
@@ -202,15 +171,11 @@ export default function ProjectGalaxy() {
         <Orbit radius={13} />
         <Orbit radius={16} />
 
-        {/* Planets */}
-
         <Planet radius={4} speed={0.5} size={0.55} color="#9333ea" project={projects[0]} setActive={setActiveProject}/>
         <Planet radius={7} speed={0.35} size={0.7} color="#22c55e" project={projects[1]} setActive={setActiveProject}/>
         <Planet radius={10} speed={0.25} size={0.8} color="#f59e0b" project={projects[2]} setActive={setActiveProject}/>
         <Planet radius={13} speed={0.18} size={0.9} color="#ef4444" project={projects[3]} setActive={setActiveProject}/>
         <Planet radius={16} speed={0.12} size={1.1} color="#3b82f6" project={projects[4]} setActive={setActiveProject}/>
-
-        {/* Neural Network */}
 
         <NeuralBeam start={[4,0,0]} end={[7,0,0]} />
         <NeuralBeam start={[7,0,0]} end={[10,0,0]} />

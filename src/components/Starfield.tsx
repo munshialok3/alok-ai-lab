@@ -2,8 +2,13 @@
 
 import { Points } from '@react-three/drei'
 import { useMemo } from 'react'
+import * as THREE from 'three'
 
 export default function Starfield() {
+
+  const texture = new THREE.TextureLoader().load(
+    "https://threejs.org/examples/textures/sprites/disc.png"
+  )
 
   const stars = useMemo(() => {
 
@@ -27,9 +32,11 @@ export default function Starfield() {
     <Points positions={stars} stride={3}>
 
       <pointsMaterial
+        map={texture}
         color="#60a5fa"
-        size={0.08}
+        size={0.12}
         sizeAttenuation
+        transparent
         depthWrite={false}
       />
 
