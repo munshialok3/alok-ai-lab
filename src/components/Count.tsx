@@ -1,20 +1,20 @@
 'use client'
-import { useEffect, useRef, useState, CSSProperties } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 interface Props {
   to: number
   prefix?: string
   suffix?: string
   dur?: number
-  style?: CSSProperties
   className?: string
+  style?: React.CSSProperties
 }
 
-export default function Count({ to, prefix='', suffix='', dur=1900, style, className='' }: Props) {
-  const ref = useRef<HTMLSpanElement>(null)
-  const [v, setV] = useState(0)
-  const fired = useRef(false)
+export default function Count({ to, prefix = '', suffix = '', dur = 1900, className = '', style }: Props) {
+  const ref    = useRef<HTMLSpanElement>(null)
+  const fired  = useRef(false)
   const isFloat = !Number.isInteger(to)
+  const [v, setV] = useState(0)
 
   useEffect(() => {
     const obs = new IntersectionObserver(([e]) => {
@@ -22,9 +22,9 @@ export default function Count({ to, prefix='', suffix='', dur=1900, style, class
       fired.current = true
       const t0 = Date.now()
       const tick = () => {
-        const p = Math.min((Date.now()-t0)/dur, 1)
-        const e = 1 - Math.pow(1-p, 4)
-        setV(isFloat ? parseFloat((e*to).toFixed(1)) : Math.round(e*to))
+        const p  = Math.min((Date.now() - t0) / dur, 1)
+        const ep = 1 - Math.pow(1 - p, 4)
+        setV(isFloat ? parseFloat((ep * to).toFixed(1)) : Math.round(ep * to))
         if (p < 1) requestAnimationFrame(tick)
         else setV(to)
       }
@@ -36,7 +36,7 @@ export default function Count({ to, prefix='', suffix='', dur=1900, style, class
   }, [to, dur, isFloat])
 
   return (
-    <span ref={ref} style={style} className={className}>
+    <span ref={ref} className={className} style={style}>
       {prefix}{v}{suffix}
     </span>
   )
