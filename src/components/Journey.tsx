@@ -1,0 +1,117 @@
+'use client'
+import { motion } from 'framer-motion'
+import { useState } from 'react'
+
+const STOPS = [
+  {
+    yr:'2018 – 22', role:'B.Tech, Chemical Engineering', co:'IIT Kharagpur',
+    col:'#5b9cf6', current:false,
+    sub:'CGPA 8.57 / 10 · One of India\'s premier institutions',
+    desc:'Built analytical rigour and systems thinking — the habit of asking why things work the way they do. Graduated with distinction. Co-founded a startup in my final year that covered 45 districts.',
+    highlight:'Co-founded KioGo — ambulance platform covering 45 districts in MP, 200+ ambulances, 90+ drivers',
+    tags:['IIT Kharagpur','B.Tech','Chemical Engineering','CGPA 8.57'],
+  },
+  {
+    yr:'May 2021 – May 2022', role:'Product / Business Analyst Intern', co:'OYO',
+    col:'#f59e0b', current:false,
+    sub:'+10K monthly installs · 4.7★ App Store · –7% funnel drop',
+    desc:'App store optimisation, A/B testing, and booking funnel improvements. First time I saw how small changes in product experience translate directly into growth numbers.',
+    highlight:'Lifted ratings to 4.4 on Play Store and 4.7 on App Store through in-app feedback loops',
+    tags:['Product','A/B Testing','ASO','Growth'],
+  },
+  {
+    yr:'May 2022 – Oct 2024', role:'Analyst — Data Science', co:'American Express',
+    col:'#10b981', current:false,
+    sub:'$32M revenue · 24K+ acquisitions · 4 global markets',
+    desc:'Designed acquisition strategies targeting high-LTV segments across UK, Australia, Canada, and Japan. Led A/B and multivariate experimentation. Built decision management interfaces and anti-gaming detection systems.',
+    highlight:'60% conversion uplift via experimentation. ROI improved 11% via anti-gaming detection system.',
+    tags:['Data Science','Experimentation','Global Markets','AmEx'],
+  },
+  {
+    yr:'Nov 2024 – Present', role:'Senior Marketing Analyst — Growth & Retention', co:'Eternal (Zomato)',
+    col:'#8b5cf6', current:true,
+    sub:'1.4M → 2.5M new users · +29% OTR · WhatsApp Engine built solo',
+    desc:'Own end-to-end growth strategy, investment decisions, and unit economics for Zomato\'s new user funnel. Performance marketing across Meta, Google UAC, and Apple Search Ads. Building AI-powered growth infrastructure on the side.',
+    highlight:'Built WhatsApp Campaign Engine solo — 9 accounts, auto-swap backups, ~$0 infra cost, full audit trail',
+    tags:['Growth','Performance Marketing','Builder','Zomato'],
+  },
+]
+
+const fv = { initial:{opacity:0,x:-16}, whileInView:{opacity:1,x:0}, viewport:{once:true} }
+
+export default function Journey() {
+  const [active, setActive] = useState(3)
+
+  return (
+    <section id="journey" className="section layer">
+      <div className="inner">
+        <motion.div initial={{ opacity:0,y:22 }} whileInView={{ opacity:1,y:0 }} viewport={{ once:true }} transition={{ duration:0.7 }} style={{ marginBottom:56 }}>
+          <p className="eyebrow">Career journey</p>
+          <h2 className="section-heading">The story so far.</h2>
+          <p className="section-sub">From startup founder in college to scaling growth at one of India&apos;s most ambitious companies. Each stop was intentional.</p>
+        </motion.div>
+
+        <div style={{ display:'grid', gridTemplateColumns:'260px 1fr', gap:32 }}>
+          {/* Left nav */}
+          <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
+            {STOPS.map((s,i)=>(
+              <motion.button key={i} {...fv} transition={{ duration:0.55, delay:i*0.08 }}
+                onClick={()=>setActive(i)}
+                style={{
+                  textAlign:'left', padding:'14px 16px', borderRadius:14,
+                  background: active===i ? `${s.col}10` : 'transparent',
+                  border: active===i ? `1px solid ${s.col}35` : '1px solid transparent',
+                  transition:'all 0.25s',
+                }}
+              >
+                <div style={{ fontFamily:'var(--font-syne)', fontSize:11, fontWeight:700, color:s.col, letterSpacing:'0.08em', marginBottom:4 }}>{s.yr}</div>
+                <div style={{ fontSize:13, fontWeight:600, color: active===i ? '#fff' : 'rgba(255,255,255,0.55)', lineHeight:1.3 }}>{s.co}</div>
+                <div style={{ fontSize:11, color:'var(--dim)', marginTop:2 }}>{s.role.split('—')[0].trim()}</div>
+              </motion.button>
+            ))}
+          </div>
+
+          {/* Right detail */}
+          <motion.div
+            key={active}
+            initial={{ opacity:0, y:16 }}
+            animate={{ opacity:1, y:0 }}
+            transition={{ duration:0.4 }}
+          >
+            <div className="card" style={{ height:'100%' }}>
+              <div style={{ position:'absolute', top:0, left:0, right:0, height:1, background:`linear-gradient(90deg,transparent,${STOPS[active].col}70,transparent)` }} />
+              <div style={{ position:'absolute', top:-30, right:-30, width:180, height:180, borderRadius:'50%', background:`radial-gradient(circle,${STOPS[active].col}09,transparent 70%)`, pointerEvents:'none' }} />
+              <div className="card-inner">
+                <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', flexWrap:'wrap', gap:12, marginBottom:20 }}>
+                  <div>
+                    <h3 style={{ fontFamily:'var(--font-syne)', fontSize:22, fontWeight:800, letterSpacing:'-0.025em', color:'#fff', marginBottom:5 }}>{STOPS[active].role}</h3>
+                    <p style={{ fontSize:15, fontWeight:600, color:STOPS[active].col, marginBottom:4 }}>{STOPS[active].co}</p>
+                    <p style={{ fontSize:11, color:'var(--dim)', fontFamily:'var(--font-syne)', letterSpacing:'0.06em' }}>{STOPS[active].yr}</p>
+                  </div>
+                  {STOPS[active].current && (
+                    <div className="live-badge"><span className="live-dot" />Current role</div>
+                  )}
+                </div>
+
+                <p style={{ fontSize:13, color:'var(--muted)', fontStyle:'italic', marginBottom:20, lineHeight:1.65 }}>{STOPS[active].sub}</p>
+
+                <div style={{ height:1, background:'rgba(255,255,255,0.06)', marginBottom:20 }} />
+
+                <p style={{ fontSize:14, color:'rgba(241,245,249,0.48)', lineHeight:1.78, marginBottom:20, fontWeight:300 }}>{STOPS[active].desc}</p>
+
+                <div style={{ background:`${STOPS[active].col}0d`, border:`1px solid ${STOPS[active].col}28`, borderRadius:12, padding:'14px 16px', marginBottom:22, display:'flex', gap:10 }}>
+                  <span style={{ flexShrink:0, width:18, height:1, background:STOPS[active].col, marginTop:10 }} />
+                  <p style={{ fontSize:13, color:'rgba(241,245,249,0.65)', lineHeight:1.65, fontWeight:400 }}>{STOPS[active].highlight}</p>
+                </div>
+
+                <div style={{ display:'flex', flexWrap:'wrap', gap:8 }}>
+                  {STOPS[active].tags.map(t=><span key={t} className="tag">{t}</span>)}
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  )
+}
