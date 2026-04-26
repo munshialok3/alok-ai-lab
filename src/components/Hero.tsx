@@ -20,10 +20,10 @@ const TICKER = [
 ]
 
 const METRICS = [
-  { to: 2.5, p: '',  s: 'M',  label: 'Users scaled',       c: '#4f8ef7' },
-  { to: 32,  p: '$', s: 'M',  label: 'Revenue generated',  c: '#f59e0b' },
-  { to: 60,  p: '',  s: '%',  label: 'Conversion uplift',  c: '#10b981' },
-  { to: 29,  p: '+', s: '%',  label: 'OTR improvement',    c: '#8b5cf6' },
+  { to: 2.5, p: '',  s: 'M',  label: 'Users scaled',      c: '#4f8ef7' },
+  { to: 32,  p: '$', s: 'M',  label: 'Revenue generated', c: '#f59e0b' },
+  { to: 60,  p: '',  s: '%',  label: 'Conversion uplift', c: '#10b981' },
+  { to: 29,  p: '+', s: '%',  label: 'OTR improvement',   c: '#8b5cf6' },
 ]
 
 export default function Hero() {
@@ -38,7 +38,7 @@ export default function Hero() {
         padding: 'clamp(90px,12vh,130px) clamp(20px,5vw,48px) clamp(60px,8vh,100px)',
         textAlign: 'center', position: 'relative',
       }}>
-        {/* Hero radial glow */}
+        {/* Radial glow */}
         <div aria-hidden style={{
           position: 'absolute',
           top: '35%', left: '50%', transform: 'translate(-50%,-50%)',
@@ -68,9 +68,7 @@ export default function Hero() {
           }}>
             Alok Munshi
           </div>
-          <h1 className="font-display h-hero grad-white">
-            Alok Munshi
-          </h1>
+          <h1 className="font-display h-hero grad-white">Alok Munshi</h1>
         </motion.div>
 
         <motion.p {...fd(0.48)} style={{
@@ -95,8 +93,8 @@ export default function Hero() {
         }}>
           <TypeAnimation
             sequence={[
-              'Scaled 1.4M → 2.5M new users monthly.',   2700,
-              'Generated $32M in incremental revenue.',   2700,
+              'Scaled 1.4M → 2.5M new users monthly.',    2700,
+              'Generated $32M in incremental revenue.',    2700,
               'Built WhatsApp infra for 9 accounts solo.', 2700,
               '+60% conversion uplift via experimentation.', 2700,
               'From IIT Kharagpur to the growth frontier.', 2700,
@@ -107,7 +105,7 @@ export default function Hero() {
           />
         </motion.div>
 
-        {/* CTA buttons */}
+        {/* CTA buttons — now includes Resume download */}
         <motion.div {...fd(0.78)} style={{
           display: 'flex', gap: 'clamp(8px,1.5vw,14px)',
           justifyContent: 'center', flexWrap: 'wrap',
@@ -119,6 +117,17 @@ export default function Hero() {
           <button className="btn-ghost" onClick={() => go('journey')}>
             My journey →
           </button>
+          <a
+            href="/Alok_Munshi_Resume_2026.pdf"
+            download
+            className="btn-ghost"
+            style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 }}
+          >
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M6 1v7M3.5 6l2.5 2.5L8.5 6M1.5 10.5h9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            Resume
+          </a>
           <a
             href="https://linkedin.com/in/munshialok"
             target="_blank" rel="noopener noreferrer"
@@ -171,14 +180,8 @@ export default function Hero() {
             display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
           }}
         >
-          <span style={{
-            fontSize: 9, fontWeight: 600, letterSpacing: '0.28em',
-            color: 'rgba(232,237,245,0.22)', textTransform: 'uppercase',
-          }}>scroll</span>
-          <div style={{
-            width: 1, height: 'clamp(32px,5vh,48px)',
-            background: 'linear-gradient(180deg, rgba(79,142,247,0.6), transparent)',
-          }} />
+          <span style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.28em', color: 'rgba(232,237,245,0.22)', textTransform: 'uppercase' }}>scroll</span>
+          <div style={{ width: 1, height: 'clamp(32px,5vh,48px)', background: 'linear-gradient(180deg, rgba(79,142,247,0.6), transparent)' }} />
         </motion.div>
       </section>
 

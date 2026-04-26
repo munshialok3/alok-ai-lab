@@ -9,11 +9,14 @@ const LINKS = [
   { label: 'Skills',   id: 'skills' },
 ]
 
+// ── Update this path once you add your resume PDF to /public/ ──────────────
+const RESUME_URL = '/Alok_Munshi_Resume_2026.pdf'
+
 export default function Navbar() {
-  const [scrolled,     setScrolled]     = useState(false)
-  const [active,       setActive]       = useState('')
-  const [isMobile,     setIsMobile]     = useState(false)
-  const [menuOpen,     setMenuOpen]     = useState(false)
+  const [scrolled,  setScrolled]  = useState(false)
+  const [active,    setActive]    = useState('')
+  const [isMobile,  setIsMobile]  = useState(false)
+  const [menuOpen,  setMenuOpen]  = useState(false)
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 55)
@@ -28,7 +31,6 @@ export default function Navbar() {
     return () => window.removeEventListener('resize', check)
   }, [])
 
-  // Close menu on scroll
   useEffect(() => {
     const fn = () => { if (menuOpen) setMenuOpen(false) }
     window.addEventListener('scroll', fn, { passive: true })
@@ -39,6 +41,16 @@ export default function Navbar() {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
     setActive(id)
     setMenuOpen(false)
+  }
+
+  const navBg: React.CSSProperties = {
+    background: scrolled ? 'rgba(6,8,16,0.95)' : 'rgba(6,8,16,0.6)',
+    border: '1px solid rgba(255,255,255,0.09)',
+    backdropFilter: 'blur(24px)',
+    WebkitBackdropFilter: 'blur(24px)',
+    boxShadow: scrolled ? '0 8px 40px rgba(0,0,0,0.55)' : 'none',
+    transition: 'background .4s, box-shadow .4s',
+    pointerEvents: 'all',
   }
 
   return (
@@ -54,21 +66,17 @@ export default function Navbar() {
           pointerEvents: 'none',
         }}
       >
-        {/* ── DESKTOP NAV ── */}
+
+        {/* ── DESKTOP NAV ─────────────────────────────────────────── */}
         {!isMobile && (
           <div style={{
             display: 'flex', alignItems: 'center',
             gap: 'clamp(2px,0.5vw,4px)',
             padding: '5px 5px 5px clamp(14px,2vw,18px)',
             borderRadius: 100,
-            background: scrolled ? 'rgba(6,8,16,0.95)' : 'rgba(6,8,16,0.6)',
-            border: '1px solid rgba(255,255,255,0.09)',
-            backdropFilter: 'blur(24px)',
-            WebkitBackdropFilter: 'blur(24px)',
-            boxShadow: scrolled ? '0 8px 40px rgba(0,0,0,0.55)' : 'none',
-            transition: 'background .4s, box-shadow .4s',
-            pointerEvents: 'all',
+            ...navBg,
           }}>
+            {/* Brand */}
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
               style={{
@@ -84,110 +92,80 @@ export default function Navbar() {
               Home
             </button>
 
+            {/* Nav links */}
             {LINKS.map(l => (
               <button
                 key={l.id}
                 onClick={() => go(l.id)}
                 style={{
-                  padding: `7px clamp(10px,1.2vw,15px)`,
+                  padding: '7px clamp(10px,1.2vw,15px)',
                   borderRadius: 100,
-                  fontSize: 'clamp(11px,1.1vw,13px)',
-                  fontWeight: 500, border: 'none', fontFamily: 'inherit',
-                  color:      active === l.id ? '#fff' : 'rgba(232,237,245,0.45)',
+                  fontSize: 'clamp(11px,1.1vw,13px)', fontWeight: 500,
+                  border: 'none', fontFamily: 'inherit',
+                  color: active === l.id ? '#fff' : 'rgba(232,237,245,0.45)',
                   background: active === l.id ? 'rgba(255,255,255,0.09)' : 'transparent',
                   transition: 'all .2s', whiteSpace: 'nowrap', cursor: 'pointer',
-                }}
-                onMouseEnter={e => {
-                  if (active !== l.id)(e.currentTarget as HTMLElement).style.color = 'rgba(232,237,245,0.85)'
-                }}
-                onMouseLeave={e => {
-                  if (active !== l.id)(e.currentTarget as HTMLElement).style.color = 'rgba(232,237,245,0.45)'
                 }}
               >
                 {l.label}
               </button>
             ))}
 
+            {/* Resume download */}
+            <a
+              href={RESUME_URL}
+              download
+              className="btn-ghost"
+              style={{ fontSize: 'clamp(11px,1.1vw,13px)', padding: '8px clamp(12px,1.4vw,16px)', marginLeft: 2, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 5 }}
+            >
+              <svg width="11" height="11" viewBox="0 0 12 12" fill="none" style={{ flexShrink: 0 }}>
+                <path d="M6 1v7M3.5 6l2.5 2.5L8.5 6M1.5 10.5h9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              Resume
+            </a>
+
+            {/* Let's connect */}
             <button
               onClick={() => go('contact')}
               className="btn-primary"
-              style={{
-                padding: `8px clamp(14px,1.8vw,20px)`,
-                fontSize: 'clamp(11px,1.1vw,13px)',
-                marginLeft: 'clamp(4px,0.5vw,6px)',
-                color: '#fff', cursor: 'pointer',
-              }}
+              style={{ padding: '8px clamp(14px,1.8vw,20px)', fontSize: 'clamp(11px,1.1vw,13px)', marginLeft: 'clamp(4px,0.5vw,6px)', color: '#fff', cursor: 'pointer' }}
             >
               Let&apos;s connect
             </button>
           </div>
         )}
 
-        {/* ── MOBILE NAV ── */}
+        {/* ── MOBILE NAV ──────────────────────────────────────────── */}
         {isMobile && (
           <div style={{
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
             width: '100%',
             padding: '8px 8px 8px 18px',
             borderRadius: 100,
-            background: scrolled ? 'rgba(6,8,16,0.95)' : 'rgba(6,8,16,0.6)',
-            border: '1px solid rgba(255,255,255,0.09)',
-            backdropFilter: 'blur(24px)',
-            WebkitBackdropFilter: 'blur(24px)',
-            boxShadow: scrolled ? '0 8px 40px rgba(0,0,0,0.55)' : 'none',
-            transition: 'background .4s, box-shadow .4s',
-            pointerEvents: 'all',
+            ...navBg,
           }}>
-            {/* Home label */}
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
               style={{
                 fontFamily: 'Syne, sans-serif', fontWeight: 800,
                 fontSize: 14, letterSpacing: '0.1em',
-                color: '#fff', background: 'none', border: 'none',
-                cursor: 'pointer', whiteSpace: 'nowrap',
+                color: '#fff', background: 'none', border: 'none', cursor: 'pointer',
               }}
             >
               Home
             </button>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              {/* Let's connect */}
-              <button
-                onClick={() => go('contact')}
-                className="btn-primary"
-                style={{ padding: '7px 16px', fontSize: 12, color: '#fff', cursor: 'pointer' }}
-              >
+              <button onClick={() => go('contact')} className="btn-primary" style={{ padding: '7px 16px', fontSize: 12, color: '#fff', cursor: 'pointer' }}>
                 Let&apos;s connect
               </button>
-
-              {/* Hamburger */}
               <button
                 onClick={() => setMenuOpen(o => !o)}
-                style={{
-                  width: 36, height: 36, borderRadius: '50%',
-                  background: 'rgba(255,255,255,0.07)',
-                  border: '1px solid rgba(255,255,255,0.12)',
-                  display: 'flex', flexDirection: 'column',
-                  alignItems: 'center', justifyContent: 'center',
-                  gap: 5, cursor: 'pointer',
-                }}
+                style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.12)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 5, cursor: 'pointer' }}
                 aria-label="Menu"
               >
                 {[0, 1, 2].map(i => (
-                  <span key={i} style={{
-                    display: 'block',
-                    width: menuOpen ? (i === 1 ? 0 : 16) : 16,
-                    height: 1.5,
-                    background: '#fff',
-                    borderRadius: 2,
-                    transition: 'all 0.2s',
-                    transform: menuOpen
-                      ? i === 0 ? 'translateY(6.5px) rotate(45deg)'
-                      : i === 2 ? 'translateY(-6.5px) rotate(-45deg)'
-                      : 'scaleX(0)'
-                      : 'none',
-                  }} />
+                  <span key={i} style={{ display: 'block', width: menuOpen ? (i === 1 ? 0 : 16) : 16, height: 1.5, background: '#fff', borderRadius: 2, transition: 'all 0.2s', transform: menuOpen ? i === 0 ? 'translateY(6.5px) rotate(45deg)' : i === 2 ? 'translateY(-6.5px) rotate(-45deg)' : 'scaleX(0)' : 'none' }} />
                 ))}
               </button>
             </div>
@@ -195,7 +173,7 @@ export default function Navbar() {
         )}
       </motion.nav>
 
-      {/* ── MOBILE DROPDOWN MENU ── */}
+      {/* ── MOBILE DROPDOWN ─────────────────────────────────────────── */}
       <AnimatePresence>
         {isMobile && menuOpen && (
           <motion.div
@@ -226,14 +204,30 @@ export default function Navbar() {
                   color: active === l.id ? '#fff' : 'rgba(232,237,245,0.6)',
                   background: active === l.id ? 'rgba(255,255,255,0.06)' : 'transparent',
                   border: 'none',
-                  borderBottom: i < LINKS.length - 1 ? '1px solid rgba(255,255,255,0.06)' : 'none',
-                  cursor: 'pointer',
-                  transition: 'all .15s',
+                  borderBottom: i < LINKS.length ? '1px solid rgba(255,255,255,0.06)' : 'none',
+                  cursor: 'pointer', transition: 'all .15s',
                 }}
               >
                 {l.label}
               </button>
             ))}
+            {/* Resume in mobile menu */}
+            <a
+              href={RESUME_URL}
+              download
+              onClick={() => setMenuOpen(false)}
+              style={{
+                display: 'block', width: '100%', textAlign: 'left',
+                padding: '16px 24px',
+                fontSize: 15, fontWeight: 500, fontFamily: 'inherit',
+                color: 'rgba(232,237,245,0.6)',
+                background: 'transparent',
+                borderTop: '1px solid rgba(255,255,255,0.06)',
+                textDecoration: 'none',
+              }}
+            >
+              ↓ Download Resume
+            </a>
           </motion.div>
         )}
       </AnimatePresence>

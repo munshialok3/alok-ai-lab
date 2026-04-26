@@ -1,17 +1,131 @@
 'use client'
 import { motion } from 'framer-motion'
+import { useState, useEffect } from 'react'
+
+/* ─────────────────────────────────────────────────────────────────
+   SETUP INSTRUCTIONS (one-time, ~5 minutes):
+   1. Go to https://emailjs.com → create a free account
+   2. Add an Email Service (Gmail works) → copy the Service ID
+   3. Create an Email Template with these variables:
+        {{from_name}}  {{from_email}}  {{phone}}  {{subject}}  {{message}}
+      Set "To Email" to: munshialok3@gmail.com
+      Copy the Template ID
+   4. Go to Account → copy your Public Key
+   5. Replace the 3 placeholders below:
+────────────────────────────────────────────────────────────────── */
+const EMAILJS_PUBLIC_KEY  = 'WcU0ZQalqhEAhPPf8'   // e.g. 'user_xxxxxxxxxxx'
+const EMAILJS_SERVICE_ID  = 'service_ogyi60g'   // e.g. 'service_abc123'
+const EMAILJS_TEMPLATE_ID = 'template_uvv42lj'  // e.g. 'template_xyz789'
 
 const fv = { initial: { opacity: 0, y: 24 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true } }
 
-export default function Contact() {
-  return (
-    <section id="contact" className="section layer" style={{ textAlign: 'center' }}>
-      <div style={{ maxWidth: 'min(640px, 92vw)', margin: '0 auto' }}>
+const inp: React.CSSProperties = {
+  width: '100%',
+  background: 'rgba(255,255,255,0.04)',
+  border: '1px solid rgba(255,255,255,0.09)',
+  borderRadius: 'clamp(10px,1.2vw,14px)',
+  padding: 'clamp(11px,1.4vh,15px) clamp(14px,1.6vw,18px)',
+  fontSize: 'clamp(13px,1.3vw,15px)',
+  color: 'rgba(232,237,245,0.9)',
+  outline: 'none',
+  fontFamily: 'inherit',
+  transition: 'border-color .2s, background .2s',
+  boxSizing: 'border-box',
+}
 
-        <motion.div {...fv} transition={{ duration: 0.7 }}>
-          <p className="eyebrow" style={{ justifyContent: 'center' }}>
-            Let&apos;s connect
-          </p>
+function Label({ children }: { children: React.ReactNode }) {
+  return (
+    <label style={{
+      display: 'block', fontSize: 11, fontWeight: 600,
+      letterSpacing: '0.1em', color: 'rgba(232,237,245,0.35)',
+      textTransform: 'uppercase', marginBottom: 7,
+    }}>
+      {children}
+    </label>
+  )
+}
+
+function Field({ children }: { children: React.ReactNode }) {
+  return <div style={{ marginBottom: 12 }}>{children}</div>
+}
+
+export default function Contact() {
+  const [form, setForm] = useState({ name: '', email: '', phone: '', subject: '', body: '' })
+  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
+  const [ejsReady, setEjsReady] = useState(false)
+
+  // Load EmailJS SDK once
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if ((window as any).emailjs) { setEjsReady(true); return }
+    const s = document.createElement('script')
+    s.src = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js'
+    s.onload = () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ;(window as any).emailjs.init(EMAILJS_PUBLIC_KEY)
+      setEjsReady(true)
+    }
+    document.head.appendChild(s)
+  }, [])
+
+  const ch = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    setForm(p => ({ ...p, [e.target.name]: e.target.value }))
+
+  const focusOn  = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    e.target.style.borderColor = 'rgba(79,142,247,0.5)'
+    e.target.style.background  = 'rgba(79,142,247,0.04)'
+  }
+  const focusOff = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    e.target.style.borderColor = 'rgba(255,255,255,0.09)'
+    e.target.style.background  = 'rgba(255,255,255,0.04)'
+  }
+
+  const canSend = form.name.trim() && form.email.trim() && form.subject.trim() && form.body.trim()
+
+  // ── Primary: send via EmailJS (stays on page, seamless) ──────────────────
+  const sendViaEmailJS = async () => {
+    if (!ejsReady || !canSend) return
+    setStatus('sending')
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (window as any).emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+        from_name:  form.name,
+        from_email: form.email,
+        phone:      form.phone || 'Not provided',
+        subject:    form.subject,
+        message:    form.body,
+      })
+      setStatus('sent')
+      setForm({ name: '', email: '', phone: '', subject: '', body: '' })
+    } catch {
+      setStatus('error')
+    }
+  }
+
+  // ── Fallback: mailto (opens system mail client, pre-fills everything) ─────
+  const openMailClient = () => {
+    const bodyText = [
+      form.body,
+      '',
+      '─────────────────',
+      `Name: ${form.name || '(not filled)'}`,
+      form.email ? `Email: ${form.email}` : '',
+      form.phone ? `Phone / WhatsApp: ${form.phone}` : '',
+    ].filter(Boolean).join('\n')
+
+    const sub = encodeURIComponent(form.subject || 'Reaching out from your portfolio')
+    window.location.href =
+      `mailto:munshialok3@gmail.com?subject=${sub}&body=${encodeURIComponent(bodyText)}`
+  }
+
+  return (
+    <section id="contact" className="section layer">
+      <div style={{ maxWidth: 'min(720px, 92vw)', margin: '0 auto' }}>
+
+        {/* ── Header ─────────────────────────────────────────────── */}
+        <motion.div {...fv} transition={{ duration: 0.7 }} style={{ textAlign: 'center', marginBottom: 'clamp(36px,5vh,56px)' }}>
+          <p className="eyebrow" style={{ justifyContent: 'center' }}>Let&apos;s connect</p>
           <h2 className="font-display" style={{
             fontSize: 'clamp(44px,8.5vw,100px)',
             letterSpacing: '-0.045em', lineHeight: 0.92,
@@ -22,52 +136,144 @@ export default function Contact() {
           }}>
             Let&apos;s build<br />something<br />great.
           </h2>
-          <p className="text-body" style={{ marginBottom: 'clamp(28px,5vh,48px)', margin: '0 auto clamp(28px,5vh,48px)' }}>
-            I&apos;m a growth strategist who builds the infrastructure himself. If you&apos;re working on something ambitious — a hard scaling challenge, an ambitious product, or a team that needs both strategic thinking and technical execution — I&apos;d love to hear about it.
+          <p className="text-body" style={{ margin: '0 auto clamp(10px,1.5vh,16px)', maxWidth: 520 }}>
+            I&apos;m a growth strategist who builds the infrastructure himself. If you&apos;re working on
+            something ambitious — a hard scaling challenge, an ambitious product, or a team that needs
+            both strategic thinking and technical execution — I&apos;d love to hear about it.
+          </p>
+          <p style={{ fontSize: 'clamp(12px,1.2vw,13px)', color: 'rgba(232,237,245,0.3)', fontStyle: 'italic' }}>
+            Open to senior growth, product growth &amp; strategy roles — advisory, consulting, and collaborative builds.
           </p>
         </motion.div>
 
-        <motion.div {...fv} transition={{ duration: 0.65, delay: 0.15 }} style={{ display: 'flex', gap: 'clamp(8px,1.5vw,14px)', justifyContent: 'center', flexWrap: 'wrap', marginBottom: 'clamp(40px,6vh,64px)' }}>
-          <a
-            href="https://linkedin.com/in/munshialok"
-            target="_blank" rel="noopener noreferrer"
-            className="btn-primary"
-          >
+        {/* ── Quick links ─────────────────────────────────────────── */}
+        <motion.div {...fv} transition={{ duration: 0.65, delay: 0.1 }}
+          style={{ display: 'flex', gap: 'clamp(8px,1.5vw,14px)', justifyContent: 'center', flexWrap: 'wrap', marginBottom: 'clamp(40px,6vh,56px)' }}>
+          <a href="https://linkedin.com/in/munshialok" target="_blank" rel="noopener noreferrer" className="btn-primary">
             <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24">
               <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
             </svg>
             Connect on LinkedIn
           </a>
-          <a
-            href="https://github.com/munshialok3"
-            target="_blank" rel="noopener noreferrer"
-            className="btn-ghost"
-          >
+          <a href="https://github.com/munshialok3" target="_blank" rel="noopener noreferrer" className="btn-ghost">
             <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z" />
             </svg>
             GitHub
           </a>
           <a href="mailto:munshialok3@gmail.com" className="btn-ghost">
-            Email me
+            ✉ Email directly
           </a>
         </motion.div>
 
-        <motion.div {...fv} transition={{ duration: 0.6, delay: 0.28 }}>
-          <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: 'clamp(24px,4vh,36px)' }}>
-            <p style={{ fontSize: 'clamp(12px,1.3vw,14px)', color: 'rgba(232,237,245,0.32)', lineHeight: 1.75, fontStyle: 'italic', fontWeight: 300 }}>
-              Open to senior growth, product growth, and strategy roles — as well as advisory, consulting, and collaborative builds. I bring both the strategy and the execution.
-            </p>
+        {/* ── Contact Form ─────────────────────────────────────────── */}
+        <motion.div {...fv} transition={{ duration: 0.65, delay: 0.2 }}>
+          <div className="card" style={{ position: 'relative', overflow: 'hidden' }}>
+            {/* accent line */}
+            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: 'linear-gradient(90deg,transparent,rgba(79,142,247,0.55),transparent)' }} />
+            <div style={{ position: 'absolute', top: -20, right: -20, width: 'min(200px,30vw)', height: 'min(200px,30vw)', borderRadius: '50%', background: 'radial-gradient(circle,rgba(79,142,247,0.05),transparent 70%)', pointerEvents: 'none' }} />
+
+            <div className="p-card">
+              {/* Form header */}
+              <div style={{ marginBottom: 'clamp(20px,3vh,28px)' }}>
+                <p style={{ fontFamily: 'Syne, sans-serif', fontWeight: 700, fontSize: 'clamp(16px,1.8vw,20px)', color: '#fff', marginBottom: 6 }}>
+                  Send me a message
+                </p>
+                <p style={{ fontSize: 'clamp(12px,1.2vw,13px)', color: 'rgba(232,237,245,0.35)', margin: 0 }}>
+                  Hit <strong style={{ color: 'rgba(232,237,245,0.55)' }}>Send message</strong> to deliver it directly from this page, or use{' '}
+                  <strong style={{ color: 'rgba(232,237,245,0.55)' }}>Open in mail app</strong> to send from your own email client.
+                </p>
+              </div>
+
+              {/* Row 1: Name + Email */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <Field>
+                  <Label>Your name *</Label>
+                  <input name="name" value={form.name} onChange={ch} onFocus={focusOn} onBlur={focusOff}
+                    placeholder="Priya Sharma" style={inp} />
+                </Field>
+                <Field>
+                  <Label>Your email *</Label>
+                  <input name="email" type="email" value={form.email} onChange={ch} onFocus={focusOn} onBlur={focusOff}
+                    placeholder="priya@company.com" style={inp} />
+                </Field>
+              </div>
+
+              {/* Row 2: Phone + Subject */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <Field>
+                  <Label>Phone / WhatsApp</Label>
+                  <input name="phone" value={form.phone} onChange={ch} onFocus={focusOn} onBlur={focusOff}
+                    placeholder="+91 98765 43210" style={inp} />
+                </Field>
+                <Field>
+                  <Label>Subject *</Label>
+                  <input name="subject" value={form.subject} onChange={ch} onFocus={focusOn} onBlur={focusOff}
+                    placeholder="Growth role at [Company]" style={inp} />
+                </Field>
+              </div>
+
+              {/* Row 3: Message */}
+              <Field>
+                <Label>Message *</Label>
+                <textarea name="body" value={form.body} onChange={ch} onFocus={focusOn} onBlur={focusOff}
+                  rows={5} placeholder="Tell me about what you're working on, the challenge you're facing, or the role you have in mind..."
+                  style={{ ...inp, resize: 'vertical', minHeight: 120 }} />
+              </Field>
+
+              {/* Status */}
+              {status === 'sent' && (
+                <div style={{ background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.25)', borderRadius: 12, padding: '12px 16px', marginBottom: 16, color: '#10b981', fontSize: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span>✓</span>
+                  <span>Message sent — I&apos;ll get back to you soon!</span>
+                </div>
+              )}
+              {status === 'error' && (
+                <div style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.22)', borderRadius: 12, padding: '12px 16px', marginBottom: 16, color: '#ef4444', fontSize: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span>⚠</span>
+                  <span>Something went wrong. Please try the mail app button, or email me directly at munshialok3@gmail.com</span>
+                </div>
+              )}
+
+              {/* Buttons */}
+              <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center', marginTop: 4 }}>
+                {/* Primary: EmailJS (in-page, seamless) */}
+                <button
+                  onClick={sendViaEmailJS}
+                  disabled={!canSend || status === 'sending' || status === 'sent'}
+                  className="btn-primary"
+                  style={{ opacity: (!canSend || status === 'sending' || status === 'sent') ? 0.45 : 1, cursor: (!canSend || status === 'sending' || status === 'sent') ? 'not-allowed !important' : 'pointer' }}
+                >
+                  {status === 'sending' ? (
+                    <>
+                      <span style={{ display: 'inline-block', width: 12, height: 12, border: '2px solid rgba(255,255,255,0.3)', borderTopColor: '#fff', borderRadius: '50%', animation: 'spin .7s linear infinite', marginRight: 6, verticalAlign: 'middle' }} />
+                      Sending…
+                    </>
+                  ) : status === 'sent' ? '✓ Sent!' : 'Send message →'}
+                </button>
+
+                {/* Secondary: open system mail client */}
+                <button onClick={openMailClient} className="btn-ghost" style={{ fontSize: 'clamp(11px,1.1vw,13px)' }}>
+                  ✉ Open in mail app
+                </button>
+
+                <span style={{ fontSize: 11, color: 'rgba(232,237,245,0.22)', marginLeft: 2 }}>
+                  * required
+                </span>
+              </div>
+            </div>
           </div>
         </motion.div>
+
+        {/* ── Footer ─────────────────────────────────────────────── */}
+        <div style={{ marginTop: 'clamp(60px,8vh,100px)', paddingTop: 'clamp(20px,3vh,32px)', borderTop: '1px solid rgba(255,255,255,0.04)', textAlign: 'center' }}>
+          <p style={{ fontSize: 'clamp(10px,1.1vw,12px)', color: 'rgba(232,237,245,0.2)', letterSpacing: '0.12em', fontWeight: 500, textTransform: 'uppercase' }}>
+            Alok Munshi · Gurugram, India · IIT Kharagpur &apos;22 · Eternal · American Express · OYO
+          </p>
+        </div>
       </div>
 
-      {/* Footer */}
-      <div style={{ marginTop: 'clamp(60px,8vh,100px)', paddingTop: 'clamp(20px,3vh,32px)', borderTop: '1px solid rgba(255,255,255,0.04)', textAlign: 'center' }}>
-        <p style={{ fontSize: 'clamp(10px,1.1vw,12px)', color: 'rgba(232,237,245,0.2)', letterSpacing: '0.12em', fontWeight: 500, textTransform: 'uppercase' }}>
-          Alok Munshi · Gurugram, India · IIT Kharagpur &apos;22 · Eternal · American Express · OYO
-        </p>
-      </div>
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </section>
   )
 }
