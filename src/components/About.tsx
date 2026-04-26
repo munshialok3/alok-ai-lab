@@ -7,7 +7,7 @@ const SIGNALS = [
   {
     icon: '🏔️',
     label: 'Mountain person',
-    detail: 'Kedarkantha. Kuari Pass. The Himalayas have a way of resetting your perspective on what actually matters.',
+    detail: 'The Himalayas have a way of resetting your perspective on what actually matters. I am into adventure sports and activities',
   },
   {
     icon: '🧠',
@@ -22,7 +22,7 @@ const SIGNALS = [
   {
     icon: '🐕',
     label: 'Future dog dad',
-    detail: 'Don\'t have one yet. Working on it. Probably a Labrador.',
+    detail: 'Don\'t have one yet. Working on it. Probably a Golden Retriever.',
   },
 ]
 
