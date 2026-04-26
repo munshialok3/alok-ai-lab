@@ -190,12 +190,12 @@ export default function Contact() {
                 <Field>
                   <Label>Your name *</Label>
                   <input name="name" value={form.name} onChange={ch} onFocus={focusOn} onBlur={focusOff}
-                    placeholder="Priya Sharma" style={inp} />
+                    placeholder="John Doe" style={inp} />
                 </Field>
                 <Field>
                   <Label>Your email *</Label>
                   <input name="email" type="email" value={form.email} onChange={ch} onFocus={focusOn} onBlur={focusOff}
-                    placeholder="priya@company.com" style={inp} />
+                    placeholder="John@company.com" style={inp} />
                 </Field>
               </div>
 
@@ -204,7 +204,7 @@ export default function Contact() {
                 <Field>
                   <Label>Phone / WhatsApp</Label>
                   <input name="phone" value={form.phone} onChange={ch} onFocus={focusOn} onBlur={focusOff}
-                    placeholder="+91 98765 43210" style={inp} />
+                    placeholder="+91 xxxxx xxxxx" style={inp} />
                 </Field>
                 <Field>
                   <Label>Subject *</Label>

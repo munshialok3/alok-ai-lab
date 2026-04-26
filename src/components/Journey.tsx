@@ -33,7 +33,7 @@ const STOPS = [
     current: false,
     sub: '$32M revenue · 24K+ acquisitions · UK · Australia · Canada · Japan',
     desc: 'Joined AmEx straight out of IIT and owned precision digital acquisition across four global markets. The work was equal parts strategy and engineering — designing targeting logic using geolocation and behavioural signals, running multivariate experiments, and building interfaces that gave non-technical marketers real-time control over campaign logic.',
-    highlight: 'Built a Decision Management Interface enabling product × channel targeting, dynamic offer randomisation, and last-mile segmentation without engineering dependency. Added an anti-gaming detection layer that blocked promotional abuse and improved campaign ROI by 11%. Delivered 60% conversion uplift across 12+ global campaigns.',
+    highlight: 'Built a Decision Management Interface enabling product × channel targeting, dynamic offer randomisation, and last-mile segmentation without engineering dependency. Added an anti-gaming detection layer that blocked promotional abuse and improved campaign ROI by 11%. Delivered 60% conversion uplift across 12+ global campaigns. Contributed to $30M+ incremental revenue across UK, Australia, Canada, and Japan.',
     tags: ['Data Science', 'Experimentation', 'Global Markets', 'AmEx', 'Builder'],
   },
   {
@@ -42,9 +42,9 @@ const STOPS = [
     co: 'Eternal (Zomato)',
     col: '#8b5cf6',
     current: true,
-    sub: '1.4M → 2.5M users · +29% OTR · WhatsApp Engine built solo',
+    sub: '+79% new user growth · +29% OTR · WhatsApp Engine built solo',
     desc: 'Own end-to-end growth strategy, investment decisions, and unit economics for Zomato\'s new user funnel — spanning performance marketing across Meta, Google UAC, and Apple Search Ads, product growth initiatives with design teams, and cohort-level capital allocation. When a tool I needed didn\'t exist, I built it.',
-    highlight: 'Built the WhatsApp Campaign Engine solo — a production-grade proxy layer across 9 WhatsApp Business accounts that auto-swaps Meta-paused templates in under 3 seconds, at ~$0 monthly infrastructure cost. Zero downtime since launch. Also built a real-time Competitive Intel Dashboard via Sensor Tower API, served daily to 20+ stakeholders including leadership.',
+    highlight: 'Built the WhatsApp Campaign Engine solo — a production-grade proxy layer across 9 WhatsApp Business accounts that auto-swaps Meta-paused templates in under 3 seconds, at ~$0 monthly infrastructure cost. Zero downtime since launch. Also built a real-time Competitive Intel Dashboard via Sensor Tower API, served daily to cross-functional stakeholders and leadership.',
     tags: ['Growth', 'Performance Marketing', 'Builder', 'Zomato', 'P&L Owner'],
   },
 ]

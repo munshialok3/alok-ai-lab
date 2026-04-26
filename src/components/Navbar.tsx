@@ -9,9 +9,7 @@ const LINKS = [
   { label: 'Skills',   id: 'skills' },
 ]
 
-const RESUME_URL = '/Alok_Munshi_Resume_2026.pdf'
-
-export default function Navbar() {
+export default function Navbar({ onResumeRequest }: { onResumeRequest: () => void }) {
   const [scrolled,  setScrolled]  = useState(false)
   const [active,    setActive]    = useState('')
   const [isMobile,  setIsMobile]  = useState(false)
@@ -146,17 +144,16 @@ export default function Navbar() {
               </button>
             ))}
 
-            <a
-              href={RESUME_URL}
-              download
+            <button
+              onClick={onResumeRequest}
               className="btn-ghost"
-              style={{ fontSize: 'clamp(11px,1.1vw,13px)', padding: '8px clamp(12px,1.4vw,16px)', marginLeft: 2, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 5 }}
+              style={{ fontSize: 'clamp(11px,1.1vw,13px)', padding: '8px clamp(12px,1.4vw,16px)', marginLeft: 2, display: 'flex', alignItems: 'center', gap: 5, cursor: 'pointer' }}
             >
               <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
                 <path d="M6 1v7M3.5 6l2.5 2.5L8.5 6M1.5 10.5h9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
               Resume
-            </a>
+            </button>
 
             <button
               onClick={() => go('contact')}
@@ -237,22 +234,21 @@ export default function Navbar() {
                 {active === l.id ? `→ ${l.label}` : l.label}
               </button>
             ))}
-            <a
-              href={RESUME_URL}
-              download
-              onClick={() => setMenuOpen(false)}
+            <button
+              onClick={() => { setMenuOpen(false); onResumeRequest() }}
               style={{
                 display: 'block', width: '100%', textAlign: 'left',
                 padding: '16px 24px',
                 fontSize: 15, fontWeight: 500, fontFamily: 'inherit',
                 color: 'rgba(232,237,245,0.6)',
                 background: 'transparent',
+                border: 'none',
                 borderTop: '1px solid rgba(255,255,255,0.06)',
-                textDecoration: 'none',
+                cursor: 'pointer',
               }}
             >
-              ↓ Download Resume
-            </a>
+              ↓ Request Resume
+            </button>
           </motion.div>
         )}
       </AnimatePresence>

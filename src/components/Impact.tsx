@@ -5,12 +5,12 @@ import Tilt from './Tilt'
 
 const BIG = [
   {
-    to: 2.5, p: '', s: 'M', col: '#4f8ef7', glow: 'rgba(79,142,247,0.09)',
-    label: 'Monthly new users scaled',
-    desc: 'Grew new user acquisition from 1.4M to 2.5M at Eternal (Zomato), maintaining customer payback under 15 months. Owned strategy, capital allocation, and execution — end to end.',
+    to: 79, p: '+', s: '%', col: '#4f8ef7', glow: 'rgba(79,142,247,0.09)',
+    label: 'Monthly new user acquisition growth',
+    desc: 'Grew new user monthly acquisition by 79% at Eternal (Zomato), while maintaining a strong payback period. Owned strategy, capital allocation, and execution — end to end.',
   },
   {
-    to: 32, p: '$', s: 'M', col: '#f59e0b', glow: 'rgba(245,158,11,0.09)',
+    to: 30, p: '$', s: 'M+', col: '#f59e0b', glow: 'rgba(245,158,11,0.09)',
     label: 'Incremental revenue generated',
     desc: 'Designed digital acquisition strategies at American Express targeting high-LTV segments across UK, Australia, Canada, and Japan using behavioural and geolocation signals.',
   },

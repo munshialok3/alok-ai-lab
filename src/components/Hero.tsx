@@ -10,23 +10,23 @@ const fd = (delay: number) => ({
 })
 
 const TICKER = [
-  { label: 'New users scaled',  val: '1.4M → 2.5M', color: '#4f8ef7' },
-  { label: 'Revenue generated', val: '$32M',          color: '#f59e0b' },
-  { label: 'Conversion uplift', val: '+60%',           color: '#10b981' },
-  { label: 'OTR improvement',   val: '+29%',           color: '#8b5cf6' },
-  { label: 'Card acquisitions', val: '24K+',           color: '#4f8ef7' },
-  { label: 'IIT Kharagpur',     val: 'CGPA 8.57',      color: '#f59e0b' },
-  { label: 'WhatsApp accounts', val: '9 WABAs · ~$0',  color: '#10b981' },
+  { label: 'New user growth',   val: '+79% monthly',   color: '#4f8ef7' },
+  { label: 'Revenue generated', val: '$30M+',           color: '#f59e0b' },
+  { label: 'Conversion uplift', val: '+60%',            color: '#10b981' },
+  { label: 'OTR improvement',   val: '+29%',            color: '#8b5cf6' },
+  { label: 'Card acquisitions', val: '24K+',            color: '#4f8ef7' },
+  { label: 'IIT Kharagpur',     val: 'CGPA 8.57',       color: '#f59e0b' },
+  { label: 'WhatsApp accounts', val: '9 WABAs · ~$0',   color: '#10b981' },
 ]
 
 const METRICS = [
-  { to: 2.5, p: '',  s: 'M',  label: 'Users scaled',      c: '#4f8ef7' },
-  { to: 32,  p: '$', s: 'M',  label: 'Revenue generated', c: '#f59e0b' },
+  { to: 79,  p: '+', s: '%',  label: 'New user growth',   c: '#4f8ef7' },
+  { to: 30,  p: '$', s: 'M+', label: 'Revenue generated', c: '#f59e0b' },
   { to: 60,  p: '',  s: '%',  label: 'Conversion uplift', c: '#10b981' },
   { to: 29,  p: '+', s: '%',  label: 'OTR improvement',   c: '#8b5cf6' },
 ]
 
-export default function Hero() {
+export default function Hero({ onResumeRequest }: { onResumeRequest: () => void }) {
   const go = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
 
   return (
@@ -93,11 +93,11 @@ export default function Hero() {
         }}>
           <TypeAnimation
             sequence={[
-              'Scaled 1.4M → 2.5M new users monthly.',    2700,
-              'Generated $32M in incremental revenue.',    2700,
-              'Built WhatsApp infra for 9 accounts solo.', 2700,
-              '+60% conversion uplift via experimentation.', 2700,
-              'From IIT Kharagpur to the growth frontier.', 2700,
+              'Grew new user monthly acquisition by 79%.',      2700,
+              'Generated $30M+ in incremental revenue.',        2700,
+              'Built WhatsApp infra for 9 accounts solo.',      2700,
+              '+60% conversion uplift via experimentation.',    2700,
+              'From IIT Kharagpur to the growth frontier.',     2700,
             ]}
             speed={50}
             repeat={Infinity}
@@ -117,17 +117,16 @@ export default function Hero() {
           <button className="btn-ghost" onClick={() => go('journey')}>
             My journey →
           </button>
-          <a
-            href="/Alok_Munshi_Resume_2026.pdf"
-            download
+          <button
+            onClick={onResumeRequest}
             className="btn-ghost"
-            style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 }}
+            style={{ display: 'flex', alignItems: 'center', gap: 6 }}
           >
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
               <path d="M6 1v7M3.5 6l2.5 2.5L8.5 6M1.5 10.5h9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
             Resume
-          </a>
+          </button>
           <a
             href="https://linkedin.com/in/munshialok"
             target="_blank" rel="noopener noreferrer"
