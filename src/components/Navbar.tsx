@@ -9,7 +9,6 @@ const LINKS = [
   { label: 'Skills',   id: 'skills' },
 ]
 
-// ── Update this path once you add your resume PDF to /public/ ──────────────
 const RESUME_URL = '/Alok_Munshi_Resume_2026.pdf'
 
 export default function Navbar() {
@@ -18,12 +17,14 @@ export default function Navbar() {
   const [isMobile,  setIsMobile]  = useState(false)
   const [menuOpen,  setMenuOpen]  = useState(false)
 
+  // Scroll depth → glass effect
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 55)
     window.addEventListener('scroll', fn, { passive: true })
     return () => window.removeEventListener('scroll', fn)
   }, [])
 
+  // Mobile breakpoint
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 640)
     check()
@@ -31,11 +32,37 @@ export default function Navbar() {
     return () => window.removeEventListener('resize', check)
   }, [])
 
+  // Close mobile menu on scroll
   useEffect(() => {
     const fn = () => { if (menuOpen) setMenuOpen(false) }
     window.addEventListener('scroll', fn, { passive: true })
     return () => window.removeEventListener('scroll', fn)
   }, [menuOpen])
+
+  // FIX #7 — active section detection via IntersectionObserver
+  useEffect(() => {
+    const sectionIds = [...LINKS.map(l => l.id), 'about', 'contact']
+    const observers: IntersectionObserver[] = []
+
+    sectionIds.forEach(id => {
+      const el = document.getElementById(id)
+      if (!el) return
+      const obs = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) setActive(id)
+        },
+        {
+          // Trigger when section occupies the middle 40% of the viewport
+          rootMargin: '-30% 0px -60% 0px',
+          threshold: 0,
+        }
+      )
+      obs.observe(el)
+      observers.push(obs)
+    })
+
+    return () => observers.forEach(o => o.disconnect())
+  }, [])
 
   const go = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
@@ -66,8 +93,7 @@ export default function Navbar() {
           pointerEvents: 'none',
         }}
       >
-
-        {/* ── DESKTOP NAV ─────────────────────────────────────────── */}
+        {/* ── DESKTOP ── */}
         {!isMobile && (
           <div style={{
             display: 'flex', alignItems: 'center',
@@ -76,7 +102,6 @@ export default function Navbar() {
             borderRadius: 100,
             ...navBg,
           }}>
-            {/* Brand */}
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
               style={{
@@ -92,7 +117,6 @@ export default function Navbar() {
               Home
             </button>
 
-            {/* Nav links */}
             {LINKS.map(l => (
               <button
                 key={l.id}
@@ -105,26 +129,35 @@ export default function Navbar() {
                   color: active === l.id ? '#fff' : 'rgba(232,237,245,0.45)',
                   background: active === l.id ? 'rgba(255,255,255,0.09)' : 'transparent',
                   transition: 'all .2s', whiteSpace: 'nowrap', cursor: 'pointer',
+                  position: 'relative',
                 }}
               >
                 {l.label}
+                {/* Active dot indicator */}
+                {active === l.id && (
+                  <span style={{
+                    position: 'absolute', bottom: 3, left: '50%',
+                    transform: 'translateX(-50%)',
+                    width: 3, height: 3, borderRadius: '50%',
+                    background: '#4f8ef7',
+                    display: 'block',
+                  }} />
+                )}
               </button>
             ))}
 
-            {/* Resume download */}
             <a
               href={RESUME_URL}
               download
               className="btn-ghost"
               style={{ fontSize: 'clamp(11px,1.1vw,13px)', padding: '8px clamp(12px,1.4vw,16px)', marginLeft: 2, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 5 }}
             >
-              <svg width="11" height="11" viewBox="0 0 12 12" fill="none" style={{ flexShrink: 0 }}>
+              <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
                 <path d="M6 1v7M3.5 6l2.5 2.5L8.5 6M1.5 10.5h9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
               Resume
             </a>
 
-            {/* Let's connect */}
             <button
               onClick={() => go('contact')}
               className="btn-primary"
@@ -135,26 +168,19 @@ export default function Navbar() {
           </div>
         )}
 
-        {/* ── MOBILE NAV ──────────────────────────────────────────── */}
+        {/* ── MOBILE ── */}
         {isMobile && (
           <div style={{
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            width: '100%',
-            padding: '8px 8px 8px 18px',
-            borderRadius: 100,
-            ...navBg,
+            width: '100%', padding: '8px 8px 8px 18px',
+            borderRadius: 100, ...navBg,
           }}>
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              style={{
-                fontFamily: 'Syne, sans-serif', fontWeight: 800,
-                fontSize: 14, letterSpacing: '0.1em',
-                color: '#fff', background: 'none', border: 'none', cursor: 'pointer',
-              }}
+              style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: 14, letterSpacing: '0.1em', color: '#fff', background: 'none', border: 'none', cursor: 'pointer' }}
             >
               Home
             </button>
-
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <button onClick={() => go('contact')} className="btn-primary" style={{ padding: '7px 16px', fontSize: 12, color: '#fff', cursor: 'pointer' }}>
                 Let&apos;s connect
@@ -173,7 +199,7 @@ export default function Navbar() {
         )}
       </motion.nav>
 
-      {/* ── MOBILE DROPDOWN ─────────────────────────────────────────── */}
+      {/* ── MOBILE DROPDOWN ── */}
       <AnimatePresence>
         {isMobile && menuOpen && (
           <motion.div
@@ -200,18 +226,17 @@ export default function Navbar() {
                 style={{
                   display: 'block', width: '100%', textAlign: 'left',
                   padding: '16px 24px',
-                  fontSize: 15, fontWeight: 500, fontFamily: 'inherit',
+                  fontSize: 15, fontWeight: active === l.id ? 600 : 500, fontFamily: 'inherit',
                   color: active === l.id ? '#fff' : 'rgba(232,237,245,0.6)',
-                  background: active === l.id ? 'rgba(255,255,255,0.06)' : 'transparent',
+                  background: active === l.id ? 'rgba(79,142,247,0.08)' : 'transparent',
                   border: 'none',
                   borderBottom: i < LINKS.length ? '1px solid rgba(255,255,255,0.06)' : 'none',
                   cursor: 'pointer', transition: 'all .15s',
                 }}
               >
-                {l.label}
+                {active === l.id ? `→ ${l.label}` : l.label}
               </button>
             ))}
-            {/* Resume in mobile menu */}
             <a
               href={RESUME_URL}
               download

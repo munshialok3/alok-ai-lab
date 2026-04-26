@@ -42,7 +42,17 @@ body {
   cursor: none;
 }
 
-*, a, button { cursor: none !important; }
+/* FIX #9 — restore normal cursor on touch/mobile devices */
+@media (hover: none) and (pointer: coarse) {
+  body { cursor: auto; }
+  *, a, button { cursor: auto !important; }
+  .cur-dot, .cur-ring { display: none !important; }
+}
+
+/* Desktop only: hide system cursor */
+@media (hover: hover) and (pointer: fine) {
+  *, a, button { cursor: none !important; }
+}
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 3px; }
@@ -80,7 +90,7 @@ body {
   background-size: 160px;
 }
 
-/* ── Cursor ── */
+/* ── Cursor (desktop only) ── */
 .cur-dot {
   position: fixed;
   width: 9px; height: 9px;
@@ -115,7 +125,6 @@ body {
   line-height: 0.93;
 }
 
-/* Fluid heading sizes — clamped so they never break on any screen */
 .h-hero  { font-size: clamp(48px, 8vw, 112px); }
 .h-xl    { font-size: clamp(36px, 5.5vw, 72px); }
 .h-lg    { font-size: clamp(28px, 4vw, 52px); }
@@ -269,7 +278,7 @@ body {
 @keyframes ticker { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
 .ticker-track { animation: ticker 36s linear infinite; display:flex; width:max-content; }
 
-/* ── Skill bar ── */
+/* ── Skill bar (kept for any future use) ── */
 .bar-track { height: 2px; background: rgba(255,255,255,0.07); border-radius: 100px; overflow:hidden; }
 .bar-fill  { height:100%; border-radius:100px; transition: width 1.8s cubic-bezier(0.16,1,0.3,1); }
 
@@ -287,16 +296,28 @@ body {
 @media (max-width: 1024px) {
   .grid-3col { grid-template-columns: repeat(2,1fr); }
 }
+
+/* FIX #6 — mobile layout breakpoints */
 @media (max-width: 768px) {
   .grid-2col { grid-template-columns: 1fr; }
   .grid-3col { grid-template-columns: 1fr; }
   .grid-4col { grid-template-columns: repeat(2,1fr); }
   .hide-mobile { display: none !important; }
+
+  /* Journey: stack left nav above right panel */
   .tl-grid { grid-template-columns: 1fr !important; }
+
+  /* Featured project card: stack to single column */
   .feat-grid { grid-template-columns: 1fr !important; }
+
+  /* About section: stack text + cards */
+  .about-grid { grid-template-columns: 1fr !important; }
 }
+
 @media (max-width: 480px) {
   .grid-4col { grid-template-columns: 1fr 1fr; }
+  /* Hero metric strip: 2×2 on small screens */
+  .hero-metrics { grid-template-columns: repeat(2,1fr) !important; }
 }
 
 /* ── Stat number color classes ── */

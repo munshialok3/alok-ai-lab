@@ -4,36 +4,48 @@ import { useState } from 'react'
 
 const STOPS = [
   {
-    yr: '2018 – 22', role: 'B.Tech, Chemical Engineering', co: 'IIT Kharagpur',
-    col: '#4f8ef7', current: false,
-    sub: 'CGPA 8.57 / 10 · One of India\'s premier institutions',
-    desc: 'Built analytical rigour and systems thinking. Graduated with distinction. Co-founded a startup in my final year that built emergency healthcare infrastructure across 45 districts.',
-    highlight: 'Co-founded KioGo — ambulance platform covering 45 districts in MP, 200+ ambulances, 90+ drivers',
-    tags: ['IIT Kharagpur', 'B.Tech', 'Chemical Engineering', 'CGPA 8.57'],
+    yr: '2018 – 22',
+    role: 'B.Tech, Chemical Engineering',
+    co: 'IIT Kharagpur',
+    col: '#4f8ef7',
+    current: false,
+    sub: 'CGPA 8.57 / 10 · One of India\'s top engineering institutions',
+    desc: 'Chose IIT Kharagpur not to become a chemical engineer, but because it was the hardest problem-set I could find. Four years of building analytical rigour, systems thinking, and the habit of asking "why does this actually work?" before accepting anything at face value.',
+    highlight: 'In my final year, co-founded KioGo — an ambulance booking platform built to fix a real, broken system. Scaled to 45 districts across Madhya Pradesh, 200+ ambulances, 90+ drivers, and partnerships with 5 regional hospitals and 50+ pharmacies. Built from scratch, while finishing a degree.',
+    tags: ['IIT Kharagpur', 'Chemical Engineering', 'CGPA 8.57', 'Founder'],
   },
   {
-    yr: 'May 2021 – May 2022', role: 'Product / Business Analyst Intern', co: 'OYO',
-    col: '#f59e0b', current: false,
-    sub: '+10K monthly installs · 4.7★ App Store · –7% funnel drop',
-    desc: 'App store optimisation, A/B testing, and booking funnel improvements. First time I saw how small product changes translate directly into large growth numbers.',
-    highlight: 'Lifted ratings to 4.4 on Play Store and 4.7 on App Store through targeted in-app feedback loops',
-    tags: ['Product', 'A/B Testing', 'ASO', 'Growth'],
+    yr: 'May 2021 – May 2022',
+    role: 'Product / Business Analyst Intern',
+    co: 'OYO',
+    col: '#f59e0b',
+    current: false,
+    sub: '+10K monthly installs · 4.7★ App Store · –7% funnel drop-off',
+    desc: 'Two stints at OYO across back-to-back internships — the second one offered because of the first. This is where I first saw that small, precise product changes compound into large growth numbers. App store optimisation doesn\'t sound glamorous until you watch 10,000 extra people install your app in a month because you changed 3 words in a description.',
+    highlight: 'Built an in-app rating mechanism that lifted OYO\'s Play Store rating to 4.4 and App Store rating to 4.7. Designed 3 CRM campaigns with gamification features that measurably improved repeat engagement — and reduced booking funnel drop-off by 7% through iterative A/B testing.',
+    tags: ['Product', 'A/B Testing', 'ASO', 'CRM', 'Growth'],
   },
   {
-    yr: 'May 2022 – Oct 2024', role: 'Analyst — Data Science', co: 'American Express',
-    col: '#10b981', current: false,
-    sub: '$32M revenue · 24K+ acquisitions · 4 global markets',
-    desc: 'Designed acquisition strategies targeting high-LTV segments across UK, Australia, Canada, and Japan. Led A/B and multivariate experimentation. Built decision management interfaces and anti-gaming detection systems.',
-    highlight: '60% conversion uplift via experimentation. ROI improved 11% via anti-gaming detection.',
-    tags: ['Data Science', 'Experimentation', 'Global Markets', 'AmEx'],
+    yr: 'May 2022 – Oct 2024',
+    role: 'Analyst — Data Science',
+    co: 'American Express',
+    col: '#10b981',
+    current: false,
+    sub: '$32M revenue · 24K+ acquisitions · UK · Australia · Canada · Japan',
+    desc: 'Joined AmEx straight out of IIT and owned precision digital acquisition across four global markets. The work was equal parts strategy and engineering — designing targeting logic using geolocation and behavioural signals, running multivariate experiments, and building interfaces that gave non-technical marketers real-time control over campaign logic.',
+    highlight: 'Built a Decision Management Interface enabling product × channel targeting, dynamic offer randomisation, and last-mile segmentation without engineering dependency. Added an anti-gaming detection layer that blocked promotional abuse and improved campaign ROI by 11%. Delivered 60% conversion uplift across 12+ global campaigns.',
+    tags: ['Data Science', 'Experimentation', 'Global Markets', 'AmEx', 'Builder'],
   },
   {
-    yr: 'Nov 2024 – Present', role: 'Senior Marketing Analyst — Growth & Retention', co: 'Eternal (Zomato)',
-    col: '#8b5cf6', current: true,
+    yr: 'Nov 2024 – Present',
+    role: 'Senior Marketing Analyst — Growth & Retention',
+    co: 'Eternal (Zomato)',
+    col: '#8b5cf6',
+    current: true,
     sub: '1.4M → 2.5M users · +29% OTR · WhatsApp Engine built solo',
-    desc: 'Own end-to-end growth strategy, investment decisions, and unit economics for Zomato\'s new user funnel. Performance marketing across Meta, Google UAC, and Apple Search Ads. Building AI-powered growth infrastructure on the side — solo.',
-    highlight: 'Built WhatsApp Campaign Engine solo — 9 accounts, auto-swap backups, ~$0 infra cost',
-    tags: ['Growth', 'Performance Marketing', 'Builder', 'Zomato'],
+    desc: 'Own end-to-end growth strategy, investment decisions, and unit economics for Zomato\'s new user funnel — spanning performance marketing across Meta, Google UAC, and Apple Search Ads, product growth initiatives with design teams, and cohort-level capital allocation. When a tool I needed didn\'t exist, I built it.',
+    highlight: 'Built the WhatsApp Campaign Engine solo — a production-grade proxy layer across 9 WhatsApp Business accounts that auto-swaps Meta-paused templates in under 3 seconds, at ~$0 monthly infrastructure cost. Zero downtime since launch. Also built a real-time Competitive Intel Dashboard via Sensor Tower API, served daily to 20+ stakeholders including leadership.',
+    tags: ['Growth', 'Performance Marketing', 'Builder', 'Zomato', 'P&L Owner'],
   },
 ]
 
@@ -51,7 +63,8 @@ export default function Journey() {
             The story so far.
           </h2>
           <p className="text-body" style={{ maxWidth: 440 }}>
-            From startup founder in college to scaling growth at one of India&apos;s most ambitious companies. Every stop was intentional.
+            From startup founder in college to scaling growth at one of India&apos;s most ambitious companies.
+            Every stop was intentional. Every role left something behind.
           </p>
         </motion.div>
 
@@ -70,6 +83,7 @@ export default function Journey() {
                   background: active === i ? `${s.col}10` : 'transparent',
                   border: active === i ? `1px solid ${s.col}35` : '1px solid transparent',
                   transition: 'all .25s',
+                  cursor: 'pointer',
                 }}
               >
                 <div style={{ fontFamily: 'Syne, sans-serif', fontSize: 'clamp(9px,1vw,11px)', fontWeight: 700, color: s.col, letterSpacing: '0.07em', marginBottom: 4 }}>
@@ -121,7 +135,7 @@ export default function Journey() {
 
                 <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', marginBottom: 'clamp(12px,1.8vh,20px)' }} />
 
-                <p style={{ fontSize: 'clamp(13px,1.3vw,15px)', color: 'rgba(232,237,245,0.5)', lineHeight: 1.78, marginBottom: 'clamp(12px,1.8vh,20px)', fontWeight: 300 }}>
+                <p style={{ fontSize: 'clamp(13px,1.3vw,15px)', color: 'rgba(232,237,245,0.5)', lineHeight: 1.78, marginBottom: 'clamp(14px,2vh,22px)', fontWeight: 300 }}>
                   {STOPS[active].desc}
                 </p>
 
@@ -147,6 +161,15 @@ export default function Journey() {
           </motion.div>
         </div>
       </div>
+
+      {/* Mobile: stack the grid */}
+      <style>{`
+        @media (max-width: 640px) {
+          .tl-grid {
+            grid-template-columns: 1fr !important;
+          }
+        }
+      `}</style>
     </section>
   )
 }
