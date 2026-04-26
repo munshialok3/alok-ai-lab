@@ -65,7 +65,7 @@ export default function Contact() {
       {/* Footer */}
       <div style={{ marginTop: 'clamp(60px,8vh,100px)', paddingTop: 'clamp(20px,3vh,32px)', borderTop: '1px solid rgba(255,255,255,0.04)', textAlign: 'center' }}>
         <p style={{ fontSize: 'clamp(10px,1.1vw,12px)', color: 'rgba(232,237,245,0.2)', letterSpacing: '0.12em', fontWeight: 500, textTransform: 'uppercase' }}>
-          Alok Munshi · Gurugram, India · IIT Kharagpur &apos;22 · Built with Next.js &amp; Vercel
+          Alok Munshi · Gurugram, India · IIT Kharagpur &apos;22 · Eternal · American Express · OYO
         </p>
       </div>
     </section>
