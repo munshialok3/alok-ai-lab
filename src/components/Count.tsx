@@ -17,8 +17,8 @@ export default function Count({ to, prefix = '', suffix = '', dur = 1900, classN
   const [v, setV] = useState(0)
 
   useEffect(() => {
-    const obs = new IntersectionObserver(([e]) => {
-      if (!e.isIntersecting || fired.current) return
+    const run = () => {
+      if (fired.current) return
       fired.current = true
       const t0 = Date.now()
       const tick = () => {
@@ -29,10 +29,22 @@ export default function Count({ to, prefix = '', suffix = '', dur = 1900, classN
         else setV(to)
       }
       requestAnimationFrame(tick)
-      obs.disconnect()
-    }, { threshold: 0.25 })
-    if (ref.current) obs.observe(ref.current)
-    return () => obs.disconnect()
+    }
+
+    const timer = setTimeout(() => {
+      const el = ref.current
+      if (!el) return
+      const obs = new IntersectionObserver(([e]) => {
+        if (e.isIntersecting) { run(); obs.disconnect() }
+      }, { threshold: 0.05, rootMargin: '0px 0px -10px 0px' })
+      obs.observe(el)
+      // Fire immediately if already in view on mount
+      const r = el.getBoundingClientRect()
+      if (r.top < window.innerHeight && r.bottom > 0) { run(); obs.disconnect() }
+      return () => obs.disconnect()
+    }, 150)
+
+    return () => clearTimeout(timer)
   }, [to, dur, isFloat])
 
   return (

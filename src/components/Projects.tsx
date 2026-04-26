@@ -20,17 +20,23 @@ const PROJ = [
       'Instant email alerts on any swap or block — team is always informed before users notice',
       'Dashboard: bulk submit, batch management, proxy log with filters, live blocked badge',
     ],
-    built: 'Solo · 2025', link: 'https://github.com/munshialok3',
+    built: 'Solo · 2025',
+    github: 'https://github.com/munshialok3/whatsapp-campaign-engine',
+    linkedin: 'https://linkedin.com/in/munshialok',
+    demo: null,
   },
   {
     id: 'resume', icon: '📄', name: 'AI Resume Builder',
     tagline: 'Parses resumes, rewrites in STAR format, generates ATS-optimised output',
-    status: 'LIVE', sc: '#10b981', ac: '#4f8ef7', featured: false,
+    status: 'COMING SOON', sc: '#4f8ef7', ac: '#4f8ef7', featured: false,
     stack: ['Next.js', 'Claude API', 'TypeScript', 'Tailwind'],
     metrics: [{ v: 'AI', l: 'Powered' }, { v: 'ATS', l: 'Optimised' }, { v: 'STAR', l: 'Framework' }, { v: '0', l: 'Manual work' }],
     desc: 'Built on the belief that most people undersell themselves on paper. Parses raw resume content, restructures achievements into STAR bullets, and generates polished ATS-optimised output.',
     points: ['Parses existing resumes and restructures for maximum impact', 'Rewrites bullets using STAR / XYZ framework automatically', 'ATS keyword optimisation against job description input', 'Professional output, instantly'],
-    built: 'Solo · 2025', link: 'https://github.com/munshialok3',
+    built: 'Building now · 2025',
+    github: null,
+    linkedin: null,
+    demo: null,
   },
   {
     id: 'intel', icon: '📊', name: 'Competitive Intel Dashboard',
@@ -40,7 +46,10 @@ const PROJ = [
     metrics: [{ v: 'Live', l: 'Rankings' }, { v: 'Auto', l: 'Alerts' }, { v: 'Daily', l: 'Reports' }, { v: '0', l: 'Manual pulls' }],
     desc: 'Replaced a manual weekly competitive reporting process with a live, always-on intelligence system tracking competitor app rankings, install trends, and keyword movements.',
     points: ['Sensor Tower API integration for real-time data', 'Automated ranking shift alerts for priority keywords', 'Category-level benchmarking', 'Automated weekly reports to leadership'],
-    built: 'At Zomato · 2024', link: null,
+    built: 'At Zomato · 2024',
+    github: null,
+    linkedin: 'https://linkedin.com/in/munshialok',
+    demo: null,
   },
   {
     id: 'decision', icon: '🎯', name: 'Decision Management Interface',
@@ -50,7 +59,10 @@ const PROJ = [
     metrics: [{ v: '24K+', l: 'Acquisitions' }, { v: '4', l: 'Markets' }, { v: '$32M', l: 'Revenue' }, { v: '+11%', l: 'ROI lift' }],
     desc: 'Built at American Express — a targeting interface enabling dynamic offer logic and real-time prospect segmentation. Drove $32M revenue across four global markets.',
     points: ['Product × channel targeting for high-LTV segments', 'Dynamic offer logic via behavioural signals', 'Anti-gaming detection improving ROI by 11%', '60% conversion uplift via multivariate testing'],
-    built: 'At American Express · 2022–2024', link: null,
+    built: 'At American Express · 2022–2024',
+    github: null,
+    linkedin: 'https://linkedin.com/in/munshialok',
+    demo: null,
   },
 ]
 
@@ -97,10 +109,35 @@ function Modal({ p, onClose }: { p: typeof PROJ[0]; onClose: () => void }) {
               </li>
             ))}
           </ul>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, paddingBottom: 'clamp(24px,3vh,36px)' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 20 }}>
             {p.stack.map(s => (
               <span key={s} className="tag" style={{ background: `${p.ac}0d`, borderColor: `${p.ac}28`, color: p.ac }}>{s}</span>
             ))}
+          </div>
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', paddingBottom: 'clamp(24px,3vh,36px)', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: 20 }}>
+            {p.github && (
+              <a href={p.github} target="_blank" rel="noopener noreferrer" className="btn-primary"
+                style={{ fontSize: 12, padding: '9px 18px', color: '#fff', textDecoration: 'none' }}>
+                <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+                Clone on GitHub
+              </a>
+            )}
+            {p.demo && (
+              <a href={p.demo} target="_blank" rel="noopener noreferrer" className="btn-primary"
+                style={{ fontSize: 12, padding: '9px 18px', color: '#fff', textDecoration: 'none' }}>
+                ↗ Live Demo
+              </a>
+            )}
+            {p.linkedin && (
+              <a href={p.linkedin} target="_blank" rel="noopener noreferrer" className="btn-ghost"
+                style={{ fontSize: 12, padding: '9px 18px', textDecoration: 'none' }}>
+                <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                Full breakdown on LinkedIn
+              </a>
+            )}
+            {!p.github && !p.demo && !p.linkedin && (
+              <span style={{ fontSize: 12, color: 'rgba(232,237,245,0.28)', fontStyle: 'italic' }}>Internal project · NDA protected</span>
+            )}
           </div>
         </div>
       </motion.div>
@@ -159,9 +196,16 @@ export default function Projects() {
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 'clamp(14px,2vh,22px)' }}>
                 {featured.stack.map(s => <span key={s} className="tag">{s}</span>)}
               </div>
-              <span style={{ fontSize: 'clamp(12px,1.3vw,14px)', color: '#4f8ef7', fontWeight: 600 }}>
-                View full case study →
-              </span>
+              <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                <a href="https://github.com/munshialok3/whatsapp-campaign-engine" target="_blank" rel="noopener noreferrer"
+                  className="btn-primary" style={{ fontSize: 12, padding: '9px 18px', color: '#fff', textDecoration: 'none' }}>
+                  <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+                  Clone on GitHub
+                </a>
+                <button onClick={() => setModal(featured)} className="btn-ghost" style={{ fontSize: 12, padding: '9px 18px' }}>
+                  Full case study →
+                </button>
+              </div>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(8px,1.2vw,12px)' }}>
               {featured.metrics.map((m, i) => (
