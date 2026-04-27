@@ -88,13 +88,10 @@ const PROJ = [
 
 function Modal({ p, onClose }: { p: typeof PROJ[0]; onClose: () => void }) {
   useEffect(() => {
-    // Lock only html scroll — no body position change, so no scroll jump on close
     const html = document.documentElement
     const prev = html.style.overflow
     html.style.overflow = 'hidden'
-    return () => {
-      html.style.overflow = prev
-    }
+    return () => { html.style.overflow = prev }
   }, [])
 
   return (
@@ -108,33 +105,51 @@ function Modal({ p, onClose }: { p: typeof PROJ[0]; onClose: () => void }) {
         overflowY: 'auto',
         overflowX: 'hidden',
         WebkitOverflowScrolling: 'touch' as React.CSSProperties['WebkitOverflowScrolling'],
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
       }}
     >
-      {/* Close button — fixed to viewport top-right, always visible */}
-      <button
-        onClick={onClose}
-        style={{
-          position: 'fixed',
-          top: 16, right: 16,
-          zIndex: 210,
-          background: 'rgba(20,24,40,0.95)',
-          border: '1px solid rgba(255,255,255,0.2)',
-          color: '#fff',
-          width: 44, height: 44,
-          borderRadius: '50%',
-          fontSize: 18,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          cursor: 'pointer',
-          boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
-        }}
-        aria-label="Close"
-      >✕</button>
-
+      {/* Close bar — sticky at top of the scrollable overlay, always in view */}
       <div
         onClick={e => e.stopPropagation()}
         style={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 10,
+          width: '100%',
           maxWidth: 'min(680px, 95vw)',
-          margin: '60px auto 40px',
+          display: 'flex',
+          justifyContent: 'flex-end',
+          padding: '16px 12px 8px',
+          background: 'rgba(0,0,0,0.92)',
+        }}
+      >
+        <button
+          onClick={onClose}
+          style={{
+            background: 'rgba(255,255,255,0.12)',
+            border: '1.5px solid rgba(255,255,255,0.3)',
+            color: '#fff',
+            width: 48, height: 48,
+            borderRadius: '50%',
+            fontSize: 20,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            cursor: 'pointer',
+            flexShrink: 0,
+            WebkitTapHighlightColor: 'transparent',
+          } as React.CSSProperties}
+          aria-label="Close"
+        >✕</button>
+      </div>
+
+      {/* Modal card */}
+      <div
+        onClick={e => e.stopPropagation()}
+        style={{
+          width: '100%',
+          maxWidth: 'min(680px, 95vw)',
+          margin: '0 auto 40px',
           background: '#0a0f1e',
           border: '1px solid rgba(255,255,255,0.1)',
           borderRadius: 'clamp(16px,2vw,28px)',
