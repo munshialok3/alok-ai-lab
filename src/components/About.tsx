@@ -30,7 +30,7 @@ export default function About() {
   return (
     <section id="about" className="section layer">
       <div className="inner">
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(32px,5vw,80px)', alignItems: 'center' }}>
+        <div className="about-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(32px,5vw,80px)', alignItems: 'center' }}>
 
           {/* Left — text */}
           <motion.div {...fv} transition={{ duration: 0.7 }}>
@@ -51,9 +51,9 @@ export default function About() {
                 I built it myself.
               </p>
               <p className="text-body" style={{ maxWidth: 460 }}>
-                I&apos;m drawn to problems that are genuinely hard and matter at scale — the kind where solving it
-                changes something real for a lot of people. Scaling from 1.4M to 2.5M users isn&apos;t just a number.
-                That&apos;s millions of first orders, first experiences, first impressions.
+                I&apos;m drawn to problems that are genuinely hard and matter at scale — the kind where the solution
+                has to hold for millions of people, not just work in a demo. Growth at that scale isn&apos;t just a metric.
+                Every drop in conversion, every broken flow, every missed moment of trust shows up as a person who didn&apos;t come back.
               </p>
             </div>
           </motion.div>
@@ -112,14 +112,7 @@ export default function About() {
         </div>
       </div>
 
-      {/* Mobile: stack columns */}
-      <style>{`
-        @media (max-width: 700px) {
-          #about .inner > div {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      `}</style>
+
     </section>
   )
 }

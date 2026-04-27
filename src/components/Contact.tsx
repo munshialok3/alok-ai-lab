@@ -3,19 +3,22 @@ import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 
 /* ─────────────────────────────────────────────────────────────────
-   SETUP INSTRUCTIONS (one-time, ~5 minutes):
-   1. Go to https://emailjs.com → create a free account
-   2. Add an Email Service (Gmail works) → copy the Service ID
-   3. Create an Email Template with these variables:
-        {{from_name}}  {{from_email}}  {{phone}}  {{subject}}  {{message}}
-      Set "To Email" to: munshialok3@gmail.com
-      Copy the Template ID
-   4. Go to Account → copy your Public Key
-   5. Replace the 3 placeholders below:
+   CREDENTIALS: stored in .env.local (never commit this file).
+   Add these 3 variables to Vercel: Settings → Environment Variables.
+
+   Variable names:
+     NEXT_PUBLIC_EMAILJS_PUBLIC_KEY   → your EmailJS public key
+     NEXT_PUBLIC_EMAILJS_SERVICE_ID   → your service ID
+     NEXT_PUBLIC_EMAILJS_TEMPLATE_ID  → your template ID
+
+   IMPORTANT: NEXT_PUBLIC_ vars are still visible in the browser bundle.
+   For real protection, go to emailjs.com → Account → Security and add
+   https://alok-munshi-portfolio.vercel.app to your Allowed Origins list.
+   This prevents anyone else from using your keys on their own domain.
 ────────────────────────────────────────────────────────────────── */
-const EMAILJS_PUBLIC_KEY  = 'WcU0ZQalqhEAhPPf8'   // e.g. 'user_xxxxxxxxxxx'
-const EMAILJS_SERVICE_ID  = 'service_ogyi60g'   // e.g. 'service_abc123'
-const EMAILJS_TEMPLATE_ID = 'template_uvv42lj'  // e.g. 'template_xyz789'
+const EMAILJS_PUBLIC_KEY  = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY  ?? ''
+const EMAILJS_SERVICE_ID  = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID  ?? ''
+const EMAILJS_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID ?? ''
 
 const fv = { initial: { opacity: 0, y: 24 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true } }
 
@@ -186,7 +189,7 @@ export default function Contact() {
               </div>
 
               {/* Row 1: Name + Email */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              <div className="contact-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                 <Field>
                   <Label>Your name *</Label>
                   <input name="name" value={form.name} onChange={ch} onFocus={focusOn} onBlur={focusOff}
@@ -200,7 +203,7 @@ export default function Contact() {
               </div>
 
               {/* Row 2: Phone + Subject */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              <div className="contact-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                 <Field>
                   <Label>Phone / WhatsApp</Label>
                   <input name="phone" value={form.phone} onChange={ch} onFocus={focusOn} onBlur={focusOff}
@@ -242,7 +245,7 @@ export default function Contact() {
                   onClick={sendViaEmailJS}
                   disabled={!canSend || status === 'sending' || status === 'sent'}
                   className="btn-primary"
-                  style={{ opacity: (!canSend || status === 'sending' || status === 'sent') ? 0.45 : 1, cursor: (!canSend || status === 'sending' || status === 'sent') ? 'not-allowed !important' : 'pointer' }}
+                  style={{ opacity: (!canSend || status === 'sending' || status === 'sent') ? 0.45 : 1, cursor: (!canSend || status === 'sending' || status === 'sent') ? 'not-allowed' : 'pointer' }}
                 >
                   {status === 'sending' ? (
                     <>

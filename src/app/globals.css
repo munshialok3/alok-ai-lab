@@ -320,6 +320,12 @@ body {
   .hero-metrics { grid-template-columns: repeat(2,1fr) !important; }
 }
 
+/* ── Contact form: stack to 1-col on small screens ── */
+.contact-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 540px) {
+  .contact-row { grid-template-columns: 1fr; }
+}
+
 /* ── Stat number color classes ── */
 .c-blue   { color: var(--blue); }
 .c-amber  { color: var(--amber); }

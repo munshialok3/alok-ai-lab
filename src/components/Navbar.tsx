@@ -50,8 +50,8 @@ export default function Navbar({ onResumeRequest }: { onResumeRequest: () => voi
           if (entry.isIntersecting) setActive(id)
         },
         {
-          // Trigger when section occupies the middle 40% of the viewport
-          rootMargin: '-30% 0px -60% 0px',
+          // Trigger when section occupies the middle 30% of the viewport
+          rootMargin: '-20% 0px -50% 0px',
           threshold: 0,
         }
       )

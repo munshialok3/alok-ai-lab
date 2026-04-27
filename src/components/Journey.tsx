@@ -162,14 +162,7 @@ export default function Journey() {
         </div>
       </div>
 
-      {/* Mobile: stack the grid */}
-      <style>{`
-        @media (max-width: 640px) {
-          .tl-grid {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      `}</style>
+
     </section>
   )
 }

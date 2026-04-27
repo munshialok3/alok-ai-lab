@@ -141,7 +141,7 @@ export default function Hero({ onResumeRequest }: { onResumeRequest: () => void 
           width: '100%', maxWidth: 'min(760px, 95vw)',
           display: 'grid', gridTemplateColumns: 'repeat(4,1fr)',
           gap: 1, borderRadius: 'clamp(14px,2vw,22px)', overflow: 'hidden',
-        }}>
+        }} className="hero-metrics">
           {METRICS.map((m, i) => (
             <div key={i} style={{
               background: 'rgba(255,255,255,0.038)',
