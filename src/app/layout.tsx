@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     url: BASE_URL,
-    title: 'Alok Munshi — Senior Growth Strategist & Builder',
+    title: 'Alok Munshi — Growth Strategist & Builder',
     description: 'Scaled multi-million new users. $32M incremental revenue generated. Building AI growth infrastructure. IIT Kharagpur \'22. Based in Gurugram.',
     siteName: 'Alok Munshi',
     images: [
