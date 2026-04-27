@@ -16,14 +16,17 @@ export default function ResumeGateModal({ open, onClose }: { open: boolean; onCl
   const [status, setStatus]     = useState<Status>('idle')
   const [errMsg, setErrMsg]     = useState('')
 
-  // Lock html scroll only — no body position change, no scroll jump on close
+  // Lock scroll + hide navbar when open
   useEffect(() => {
     if (!open) return
     const html = document.documentElement
     const prev = html.style.overflow
     html.style.overflow = 'hidden'
+    const nav = document.querySelector('nav') as HTMLElement | null
+    if (nav) nav.style.display = 'none'
     return () => {
       html.style.overflow = prev
+      if (nav) nav.style.display = ''
     }
   }, [open])
 

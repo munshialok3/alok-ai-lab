@@ -88,10 +88,19 @@ const PROJ = [
 
 function Modal({ p, onClose }: { p: typeof PROJ[0]; onClose: () => void }) {
   useEffect(() => {
+    // Lock scroll
     const html = document.documentElement
     const prev = html.style.overflow
     html.style.overflow = 'hidden'
-    return () => { html.style.overflow = prev }
+
+    // Hide navbar
+    const nav = document.querySelector('nav') as HTMLElement | null
+    if (nav) nav.style.display = 'none'
+
+    return () => {
+      html.style.overflow = prev
+      if (nav) nav.style.display = ''
+    }
   }, [])
 
   return (
