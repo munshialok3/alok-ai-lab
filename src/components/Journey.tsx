@@ -72,7 +72,7 @@ export default function Journey() {
             background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
             borderRadius: 100, padding: '6px 14px',
           }}>
-            <span style={{ fontSize: 13 }}>👆</span>
+            <span style={{ fontSize: 13 }}>👇</span>
             <span style={{ fontSize: 11, fontWeight: 500, color: 'rgba(232,237,245,0.35)', letterSpacing: '0.06em' }}>
               Tap each role to explore
             </span>
