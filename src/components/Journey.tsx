@@ -66,6 +66,17 @@ export default function Journey() {
             From startup founder in college to scaling growth at one of India&apos;s most ambitious companies.
             Every stop was intentional. Every role left something behind.
           </p>
+          {/* Tap hint — mobile only */}
+          <div style={{
+            display: 'inline-flex', alignItems: 'center', gap: 7, marginTop: 16,
+            background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
+            borderRadius: 100, padding: '6px 14px',
+          }}>
+            <span style={{ fontSize: 13 }}>👆</span>
+            <span style={{ fontSize: 11, fontWeight: 500, color: 'rgba(232,237,245,0.35)', letterSpacing: '0.06em' }}>
+              Tap each role to explore
+            </span>
+          </div>
         </motion.div>
 
         <div className="tl-grid" style={{ display: 'grid', gridTemplateColumns: 'clamp(180px,26%,280px) 1fr', gap: 'clamp(16px,2.5vw,32px)' }}>
@@ -80,17 +91,33 @@ export default function Journey() {
                   textAlign: 'left',
                   padding: 'clamp(10px,1.5vh,14px) clamp(12px,1.5vw,16px)',
                   borderRadius: 'clamp(10px,1.2vw,14px)',
-                  background: active === i ? `${s.col}10` : 'transparent',
-                  border: active === i ? `1px solid ${s.col}35` : '1px solid transparent',
+                  background: active === i ? `${s.col}14` : 'rgba(255,255,255,0.025)',
+                  border: active === i ? `1px solid ${s.col}50` : '1px solid rgba(255,255,255,0.06)',
                   transition: 'all .25s',
                   cursor: 'pointer',
+                  position: 'relative',
+                  overflow: 'hidden',
                 }}
               >
+                {/* Active left bar indicator */}
+                <div style={{
+                  position: 'absolute', left: 0, top: 0, bottom: 0, width: 3,
+                  background: active === i ? s.col : 'transparent',
+                  borderRadius: '3px 0 0 3px',
+                  transition: 'background .25s',
+                }} />
                 <div style={{ fontFamily: 'Syne, sans-serif', fontSize: 'clamp(9px,1vw,11px)', fontWeight: 700, color: s.col, letterSpacing: '0.07em', marginBottom: 4 }}>
                   {s.yr}
                 </div>
-                <div style={{ fontSize: 'clamp(12px,1.3vw,14px)', fontWeight: 600, color: active === i ? '#fff' : 'rgba(232,237,245,0.5)', lineHeight: 1.3 }}>
-                  {s.co}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 4 }}>
+                  <div style={{ fontSize: 'clamp(12px,1.3vw,14px)', fontWeight: 600, color: active === i ? '#fff' : 'rgba(232,237,245,0.6)', lineHeight: 1.3 }}>
+                    {s.co}
+                  </div>
+                  <span style={{
+                    fontSize: 12, color: active === i ? s.col : 'rgba(232,237,245,0.2)',
+                    transition: 'all .25s', flexShrink: 0,
+                    transform: active === i ? 'translateX(2px)' : 'none',
+                  }}>→</span>
                 </div>
                 <div style={{ fontSize: 'clamp(10px,1.1vw,12px)', color: 'rgba(232,237,245,0.28)', marginTop: 2, lineHeight: 1.4 }}>
                   {s.role.split(' —')[0].split('–')[0].trim()}
