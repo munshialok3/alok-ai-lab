@@ -30,7 +30,7 @@ const TOOL_GROUPS = [
   {
     label: 'Performance & ASO',
     col: '#10b981',
-    tools: ['Meta Ads Manager', 'Google UAC', 'Apple Search Ads', 'Sensor Tower', 'Google Play Console'],
+    tools: ['Meta Ads Manager', 'Google Ads Manager', 'Apple Search Ads', 'Sensor Tower', 'Google Play Console'],
   },
   {
     label: 'Data & Infrastructure',
@@ -40,7 +40,7 @@ const TOOL_GROUPS = [
   {
     label: 'Productivity & Infra',
     col: '#8b5cf6',
-    tools: ['Excel', 'Google Sheets', 'Cloudflare', 'Vercel'],
+    tools: ['Google Sheets', 'Cloudflare', 'Vercel'],
   },
 ]
 
