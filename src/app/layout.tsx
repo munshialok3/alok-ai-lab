@@ -6,9 +6,9 @@ const BASE_URL = 'https://alok-munshi-portfolio.vercel.app'
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
-  title: 'Alok Munshi — Senior Growth Strategist & Builder | Gurugram',
+  title: 'Alok Munshi — Growth Strategist & Builder | Gurugram',
   description:
-    'Alok Munshi — Senior Growth Strategist at Eternal (Zomato), Gurugram. Scaled new user acquisition 1.4M → 2.5M. Generated $32M incremental revenue at American Express across 4 global markets. IIT Kharagpur \'22. Builds growth infrastructure solo.',
+    'Alok Munshi — Senior Analyst & Strategist at Eternal (Zomato), Gurugram. Scaled multi-million new user acquisition. Generated $32M incremental revenue at American Express across 4 global markets. IIT Kharagpur \'22. Builds growth infrastructure.',
   keywords: [
     'Alok Munshi',
     'Growth Strategist',
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     'Product Growth',
     'Performance Marketing',
     'Growth Marketing Gurugram',
-    'Marketing Analyst India',
+    'Marketing Analyst',
     'IIT Kharagpur',
     'Zomato',
     'Eternal',
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: BASE_URL,
     title: 'Alok Munshi — Senior Growth Strategist & Builder',
-    description: 'Scaled 1.4M → 2.5M users. $32M revenue. Building AI growth infrastructure solo. IIT Kharagpur \'22. Based in Gurugram.',
+    description: 'Scaled multi-million new users. $32M incremental revenue generated. Building AI growth infrastructure. IIT Kharagpur \'22. Based in Gurugram.',
     siteName: 'Alok Munshi',
     images: [
       {
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Alok Munshi — Growth Strategist & Builder',
-    description: 'Scaled 1.4M → 2.5M users. $32M revenue. IIT Kharagpur. Gurugram.',
+    description: 'Scaled multi-million new users. $32M incr revenue. IIT Kharagpur. Gurugram.',
     images: ['/og-image.png'],
   },
   alternates: {
@@ -63,7 +63,7 @@ const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Person',
   name: 'Alok Munshi',
-  jobTitle: 'Senior Marketing Analyst — Growth & Retention',
+  jobTitle: 'Senior Analyst — Growth & Retention',
   worksFor: {
     '@type': 'Organization',
     name: 'Eternal (Zomato)',
