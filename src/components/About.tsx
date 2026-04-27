@@ -7,7 +7,7 @@ const SIGNALS = [
   {
     icon: '🏔️',
     label: 'Mountain person',
-    detail: 'The Himalayas have a way of resetting your perspective on what actually matters. I am into adventure sports and activities',
+    detail: 'I believe the Himalayas have a way of resetting your perspective on what actually matters.',
   },
   {
     icon: '🧠',
