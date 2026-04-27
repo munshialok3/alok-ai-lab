@@ -88,20 +88,12 @@ const PROJ = [
 
 function Modal({ p, onClose }: { p: typeof PROJ[0]; onClose: () => void }) {
   useEffect(() => {
-    // iOS-safe scroll lock: record current scroll, fix body in place
-    const scrollY = window.scrollY
-    document.body.style.position = 'fixed'
-    document.body.style.top = `-${scrollY}px`
-    document.body.style.left = '0'
-    document.body.style.right = '0'
-    document.body.style.overflow = 'hidden'
+    // Lock only html scroll — no body position change, so no scroll jump on close
+    const html = document.documentElement
+    const prev = html.style.overflow
+    html.style.overflow = 'hidden'
     return () => {
-      document.body.style.position = ''
-      document.body.style.top = ''
-      document.body.style.left = ''
-      document.body.style.right = ''
-      document.body.style.overflow = ''
-      window.scrollTo(0, scrollY)
+      html.style.overflow = prev
     }
   }, [])
 
@@ -113,58 +105,44 @@ function Modal({ p, onClose }: { p: typeof PROJ[0]; onClose: () => void }) {
         position: 'fixed', inset: 0,
         background: 'rgba(0,0,0,0.92)',
         zIndex: 200,
-        display: 'flex', alignItems: 'flex-start', justifyContent: 'center',
-        padding: 'clamp(16px,3vw,32px)',
         overflowY: 'auto',
+        overflowX: 'hidden',
         WebkitOverflowScrolling: 'touch' as React.CSSProperties['WebkitOverflowScrolling'],
       }}
     >
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9, y: 28 }} animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.9, y: 28 }}
-        transition={{ type: 'spring', damping: 26, stiffness: 300 }}
+      {/* Close button — fixed to viewport top-right, always visible */}
+      <button
+        onClick={onClose}
+        style={{
+          position: 'fixed',
+          top: 16, right: 16,
+          zIndex: 210,
+          background: 'rgba(20,24,40,0.95)',
+          border: '1px solid rgba(255,255,255,0.2)',
+          color: '#fff',
+          width: 44, height: 44,
+          borderRadius: '50%',
+          fontSize: 18,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          cursor: 'pointer',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
+        }}
+        aria-label="Close"
+      >✕</button>
+
+      <div
         onClick={e => e.stopPropagation()}
         style={{
+          maxWidth: 'min(680px, 95vw)',
+          margin: '60px auto 40px',
           background: '#0a0f1e',
           border: '1px solid rgba(255,255,255,0.1)',
           borderRadius: 'clamp(16px,2vw,28px)',
-          width: '100%',
-          maxWidth: 'min(680px,95vw)',
           position: 'relative',
-          marginTop: 'clamp(16px,3vw,32px)',
-          marginBottom: 'clamp(16px,3vw,32px)',
         }}
       >
-        {/* Sticky close button — always visible on mobile */}
-        <div style={{
-          position: 'sticky',
-          top: 0,
-          zIndex: 10,
-          display: 'flex',
-          justifyContent: 'flex-end',
-          padding: '12px 12px 0',
-          background: 'linear-gradient(180deg, #0a0f1e 70%, transparent 100%)',
-          borderRadius: 'clamp(16px,2vw,28px) clamp(16px,2vw,28px) 0 0',
-        }}>
-          <button
-            onClick={onClose}
-            style={{
-              background: 'rgba(255,255,255,0.1)',
-              border: '1px solid rgba(255,255,255,0.18)',
-              color: '#fff',
-              width: 38, height: 38,
-              borderRadius: '50%',
-              fontSize: 16,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              flexShrink: 0,
-              cursor: 'pointer',
-            }}
-            aria-label="Close"
-          >✕</button>
-        </div>
-
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: `linear-gradient(90deg,transparent,${p.ac}80,transparent)` }} />
-        <div style={{ padding: '0 clamp(24px,3vw,40px) clamp(24px,3vw,40px)' }}>
+        <div style={{ padding: 'clamp(24px,3vw,40px)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'clamp(16px,2.5vh,24px)', gap: 12 }}>
             <div>
               <span style={{ fontSize: 'clamp(28px,4vw,40px)', display: 'block', marginBottom: 14, lineHeight: 1 }}>{p.icon}</span>
@@ -228,7 +206,7 @@ function Modal({ p, onClose }: { p: typeof PROJ[0]; onClose: () => void }) {
             )}
           </div>
         </div>
-      </motion.div>
+      </div>
     </motion.div>
   )
 }
