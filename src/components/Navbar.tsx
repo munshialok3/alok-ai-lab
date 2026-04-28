@@ -1,6 +1,7 @@
 'use client'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
+import { track } from '@vercel/analytics'
 
 const LINKS = [
   { label: 'Impact',   id: 'impact' },
@@ -14,13 +15,24 @@ export default function Navbar({ onResumeRequest }: { onResumeRequest: () => voi
   const [active,    setActive]    = useState('')
   const [isMobile,  setIsMobile]  = useState(false)
   const [menuOpen,  setMenuOpen]  = useState(false)
+  const [progress,  setProgress]  = useState(0)
 
-  // Scroll depth → glass effect
+  // Scroll depth → glass effect + progress bar
   useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 55)
+    const fn = () => {
+      setScrolled(window.scrollY > 55)
+      const total = document.documentElement.scrollHeight - window.innerHeight
+      setProgress(total > 0 ? window.scrollY / total : 0)
+    }
     window.addEventListener('scroll', fn, { passive: true })
     return () => window.removeEventListener('scroll', fn)
   }, [])
+
+  // Update scroll progress bar directly (no re-render)
+  useEffect(() => {
+    const el = document.getElementById('scroll-progress')
+    if (el) el.style.transform = `scaleX(${progress})`
+  }, [progress])
 
   // Mobile breakpoint
   useEffect(() => {
@@ -37,30 +49,31 @@ export default function Navbar({ onResumeRequest }: { onResumeRequest: () => voi
     return () => window.removeEventListener('scroll', fn)
   }, [menuOpen])
 
-  // FIX #7 — active section detection via IntersectionObserver
+  // Active section via IntersectionObserver
   useEffect(() => {
     const sectionIds = [...LINKS.map(l => l.id), 'about', 'contact']
     const observers: IntersectionObserver[] = []
-
     sectionIds.forEach(id => {
       const el = document.getElementById(id)
       if (!el) return
       const obs = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) setActive(id)
-        },
-        {
-          // Trigger when section occupies the middle 30% of the viewport
-          rootMargin: '-20% 0px -50% 0px',
-          threshold: 0,
-        }
+        ([entry]) => { if (entry.isIntersecting) setActive(id) },
+        { rootMargin: '-20% 0px -50% 0px', threshold: 0 }
       )
       obs.observe(el)
       observers.push(obs)
     })
-
     return () => observers.forEach(o => o.disconnect())
   }, [])
+
+  // Escape key closes mobile menu
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    if (e.key === 'Escape') setMenuOpen(false)
+  }, [])
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [handleKeyDown])
 
   const go = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
@@ -80,9 +93,12 @@ export default function Navbar({ onResumeRequest }: { onResumeRequest: () => voi
 
   return (
     <>
+      {/* Scroll progress bar */}
+      <div id="scroll-progress" />
+
       <motion.nav
         initial={{ y: -80, opacity: 0 }}
-        animate={{ y: 0,   opacity: 1 }}
+        animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
         style={{
           position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
@@ -131,21 +147,19 @@ export default function Navbar({ onResumeRequest }: { onResumeRequest: () => voi
                 }}
               >
                 {l.label}
-                {/* Active dot indicator */}
                 {active === l.id && (
                   <span style={{
                     position: 'absolute', bottom: 3, left: '50%',
                     transform: 'translateX(-50%)',
                     width: 3, height: 3, borderRadius: '50%',
-                    background: '#4f8ef7',
-                    display: 'block',
+                    background: '#4f8ef7', display: 'block',
                   }} />
                 )}
               </button>
             ))}
 
             <button
-              onClick={onResumeRequest}
+              onClick={() => { onResumeRequest(); track('resume_modal_opened', { source: 'navbar' }) }}
               className="btn-ghost"
               style={{ fontSize: 'clamp(11px,1.1vw,13px)', padding: '8px clamp(12px,1.4vw,16px)', marginLeft: 2, display: 'flex', alignItems: 'center', gap: 5, cursor: 'pointer' }}
             >
@@ -235,14 +249,13 @@ export default function Navbar({ onResumeRequest }: { onResumeRequest: () => voi
               </button>
             ))}
             <button
-              onClick={() => { setMenuOpen(false); onResumeRequest() }}
+              onClick={() => { setMenuOpen(false); onResumeRequest(); track('resume_modal_opened', { source: 'mobile_menu' }) }}
               style={{
                 display: 'block', width: '100%', textAlign: 'left',
                 padding: '16px 24px',
                 fontSize: 15, fontWeight: 500, fontFamily: 'inherit',
                 color: 'rgba(232,237,245,0.6)',
-                background: 'transparent',
-                border: 'none',
+                background: 'transparent', border: 'none',
                 borderTop: '1px solid rgba(255,255,255,0.06)',
                 cursor: 'pointer',
               }}

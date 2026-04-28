@@ -6,7 +6,14 @@ export default function Cursor() {
   const ring = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const d = dot.current!, r = ring.current!
+    // Only run on true pointer devices
+    const hasFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches
+    if (!hasFinePointer) return
+
+    const d = dot.current
+    const r = ring.current
+    if (!d || !r) return   // refs not mounted — bail safely
+
     let mx = -300, my = -300, rx = -300, ry = -300, raf = 0
 
     const onMove = (e: MouseEvent) => {

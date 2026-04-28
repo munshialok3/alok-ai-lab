@@ -28,6 +28,14 @@ html {
   font-size: 16px;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  /* Always reserve scrollbar space — prevents layout shift when modals open */
+  overflow-y: scroll;
+}
+
+/* Modal open state — lock BOTH html and body */
+html.modal-open,
+html.modal-open body {
+  overflow: hidden !important;
 }
 
 body {
@@ -59,6 +67,19 @@ body {
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--blue); border-radius: 2px; }
 ::selection { background: rgba(79,142,247,0.25); color: var(--blue2); }
+
+/* ── Scroll progress bar ── */
+#scroll-progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  width: 100%;
+  background: linear-gradient(90deg, var(--blue), var(--violet));
+  z-index: 9999;
+  pointer-events: none;
+  transform-origin: left;
+  transform: scaleX(0);
+}
 
 /* ── Fixed BG layers ── */
 #neural-bg {
@@ -278,7 +299,7 @@ body {
 @keyframes ticker { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
 .ticker-track { animation: ticker 36s linear infinite; display:flex; width:max-content; }
 
-/* ── Skill bar (kept for any future use) ── */
+/* ── Skill bar ── */
 .bar-track { height: 2px; background: rgba(255,255,255,0.07); border-radius: 100px; overflow:hidden; }
 .bar-fill  { height:100%; border-radius:100px; transition: width 1.8s cubic-bezier(0.16,1,0.3,1); }
 
@@ -287,6 +308,7 @@ body {
 
 /* ── Animations ── */
 @keyframes riseIn { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+@keyframes spin { to { transform: rotate(360deg); } }
 
 /* ── Responsive grid helpers ── */
 .grid-2col { display:grid; grid-template-columns:repeat(2,1fr); gap:clamp(8px,1.5vw,16px); }
@@ -297,30 +319,21 @@ body {
   .grid-3col { grid-template-columns: repeat(2,1fr); }
 }
 
-/* FIX #6 — mobile layout breakpoints */
 @media (max-width: 768px) {
   .grid-2col { grid-template-columns: 1fr; }
   .grid-3col { grid-template-columns: 1fr; }
   .grid-4col { grid-template-columns: repeat(2,1fr); }
   .hide-mobile { display: none !important; }
-
-  /* Journey: stack left nav above right panel */
   .tl-grid { grid-template-columns: 1fr !important; }
-
-  /* Featured project card: stack to single column */
   .feat-grid { grid-template-columns: 1fr !important; }
-
-  /* About section: stack text + cards */
   .about-grid { grid-template-columns: 1fr !important; }
 }
 
 @media (max-width: 480px) {
   .grid-4col { grid-template-columns: 1fr 1fr; }
-  /* Hero metric strip: 2×2 on small screens */
   .hero-metrics { grid-template-columns: repeat(2,1fr) !important; }
 }
 
-/* ── Contact form: stack to 1-col on small screens ── */
 .contact-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 @media (max-width: 540px) {
   .contact-row { grid-template-columns: 1fr; }
@@ -331,3 +344,26 @@ body {
 .c-amber  { color: var(--amber); }
 .c-green  { color: var(--green); }
 .c-violet { color: var(--violet); }
+
+/* ── Copy-email toast ── */
+.copy-toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  background: var(--blue);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 9px 20px;
+  border-radius: 100px;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 10000;
+  transition: opacity 0.2s, transform 0.2s;
+  white-space: nowrap;
+}
+.copy-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}

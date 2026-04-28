@@ -7,17 +7,17 @@ const SIGNALS = [
   {
     icon: '🏔️',
     label: 'Mountain person',
-    detail: 'I believe the Himalayas have a way of resetting your perspective on what actually matters.',
+    detail: 'The Himalayas have a way of resetting your perspective on what actually matters.',
   },
   {
     icon: '🧠',
     label: 'First principles first',
-    detail: 'I zoom out before I dive in. Strategy before data, frameworks before tools — then I execute fast.',
+    detail: 'Strategy before data, frameworks before tools — then I execute fast.',
   },
   {
     icon: '🚀',
     label: 'Builder at heart',
-    detail: 'I get restless waiting for things to get built. If I can ship it myself, I will — solo or as part of a team.',
+    detail: 'I get restless waiting for things to get built. If I can ship it myself, I will.',
   },
   {
     icon: '🐕',
@@ -52,67 +52,96 @@ export default function About() {
               </p>
               <p className="text-body" style={{ maxWidth: 460 }}>
                 I&apos;m drawn to problems that are genuinely hard and matter at scale — the kind where the solution
-                has to hold for millions of people, not just work in a demo. Growth at that scale isn&apos;t just a metric.
-                Every drop in conversion, every broken flow, every missed moment of trust shows up as a person who didn&apos;t come back.
+                has to hold for millions of people, not just work in a demo.
               </p>
             </div>
           </motion.div>
 
           {/* Right — signal cards */}
           <motion.div {...fv} transition={{ duration: 0.65, delay: 0.15 }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(8px,1.2vw,14px)' }}>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: 'clamp(8px,1.2vw,12px)',
+            }}>
               {SIGNALS.map((s, i) => (
                 <motion.div
                   key={i}
                   {...fv}
                   transition={{ duration: 0.5, delay: 0.2 + i * 0.08 }}
+                  style={{
+                    background: 'rgba(255,255,255,0.03)',
+                    border: '1px solid rgba(255,255,255,0.07)',
+                    borderRadius: 'clamp(14px,1.8vw,20px)',
+                    padding: 'clamp(18px,2.2vw,24px)',
+                    transition: 'border-color .3s, background .3s',
+                    cursor: 'default',
+                    /* Equal height via flex column */
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 10,
+                    minHeight: 'clamp(130px,14vw,160px)',
+                  }}
+                  onMouseEnter={e => {
+                    const el = e.currentTarget as HTMLElement
+                    el.style.background = 'rgba(255,255,255,0.055)'
+                    el.style.borderColor = 'rgba(255,255,255,0.12)'
+                  }}
+                  onMouseLeave={e => {
+                    const el = e.currentTarget as HTMLElement
+                    el.style.background = 'rgba(255,255,255,0.03)'
+                    el.style.borderColor = 'rgba(255,255,255,0.07)'
+                  }}
                 >
-                  <div
-                    className="card"
-                    style={{ height: '100%', position: 'relative', overflow: 'hidden' }}
-                    onMouseEnter={e => {
-                      (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.06)'
-                      ;(e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.12)'
-                    }}
-                    onMouseLeave={e => {
-                      (e.currentTarget as HTMLElement).style.background = ''
-                      ;(e.currentTarget as HTMLElement).style.borderColor = ''
-                    }}
-                  >
-                    <div className="p-card" style={{ padding: 'clamp(16px,2vw,22px)' }}>
-                      <span style={{ fontSize: 'clamp(20px,2.5vw,26px)', display: 'block', marginBottom: 10 }}>
-                        {s.icon}
-                      </span>
-                      <p style={{ fontFamily: 'Syne, sans-serif', fontWeight: 700, fontSize: 'clamp(12px,1.3vw,14px)', color: 'rgba(232,237,245,0.9)', marginBottom: 6, letterSpacing: '-0.01em' }}>
-                        {s.label}
-                      </p>
-                      <p style={{ fontSize: 'clamp(11px,1.1vw,12px)', color: 'rgba(232,237,245,0.38)', lineHeight: 1.6, fontWeight: 300 }}>
-                        {s.detail}
-                      </p>
-                    </div>
-                  </div>
+                  <span style={{ fontSize: 'clamp(22px,2.4vw,28px)', lineHeight: 1 }}>
+                    {s.icon}
+                  </span>
+                  <p style={{
+                    fontFamily: 'Syne, sans-serif', fontWeight: 700,
+                    fontSize: 'clamp(12px,1.2vw,13px)',
+                    color: 'rgba(232,237,245,0.88)',
+                    letterSpacing: '-0.01em',
+                    lineHeight: 1.3,
+                  }}>
+                    {s.label}
+                  </p>
+                  <p style={{
+                    fontSize: 'clamp(11px,1vw,12px)',
+                    color: 'rgba(232,237,245,0.38)',
+                    lineHeight: 1.65,
+                    fontWeight: 300,
+                    flexGrow: 1,
+                  }}>
+                    {s.detail}
+                  </p>
                 </motion.div>
               ))}
             </div>
 
-            {/* Currently reading / exploring strip */}
+            {/* Currently exploring strip */}
             <motion.div {...fv} transition={{ duration: 0.6, delay: 0.45 }}
-              style={{ marginTop: 'clamp(10px,1.5vw,14px)', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 'clamp(10px,1.2vw,14px)', padding: 'clamp(12px,1.8vh,18px) clamp(14px,1.8vw,20px)', display: 'flex', alignItems: 'center', gap: 12 }}>
+              style={{
+                marginTop: 'clamp(10px,1.5vw,12px)',
+                background: 'rgba(255,255,255,0.025)',
+                border: '1px solid rgba(255,255,255,0.06)',
+                borderRadius: 'clamp(10px,1.2vw,14px)',
+                padding: 'clamp(12px,1.8vh,16px) clamp(14px,1.8vw,20px)',
+                display: 'flex', alignItems: 'center', gap: 12,
+              }}>
               <span style={{ fontSize: 18, flexShrink: 0 }}>🌍</span>
               <div>
-                <p style={{ fontSize: 'clamp(9px,1vw,11px)', fontWeight: 600, letterSpacing: '0.14em', color: 'rgba(232,237,245,0.28)', textTransform: 'uppercase', marginBottom: 3 }}>
+                <p style={{ fontSize: 'clamp(9px,1vw,10px)', fontWeight: 600, letterSpacing: '0.14em', color: 'rgba(232,237,245,0.28)', textTransform: 'uppercase', marginBottom: 3 }}>
                   Currently exploring
                 </p>
-                <p style={{ fontSize: 'clamp(11px,1.2vw,13px)', color: 'rgba(232,237,245,0.55)', fontWeight: 300 }}>
+                <p style={{ fontSize: 'clamp(11px,1.2vw,13px)', color: 'rgba(232,237,245,0.52)', fontWeight: 300 }}>
                   AI-native growth infrastructure · next Himalayan trek · and what comes after Zomato.
                 </p>
               </div>
             </motion.div>
           </motion.div>
+
         </div>
       </div>
-
-
     </section>
   )
 }

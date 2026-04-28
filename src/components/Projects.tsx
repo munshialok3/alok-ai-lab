@@ -2,6 +2,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import Tilt from './Tilt'
+import { track } from '@vercel/analytics'
 
 const PROJ = [
   {
@@ -88,20 +89,24 @@ const PROJ = [
 
 function Modal({ p, onClose }: { p: typeof PROJ[0]; onClose: () => void }) {
   useEffect(() => {
-    // Lock scroll
-    const html = document.documentElement
-    const prev = html.style.overflow
-    html.style.overflow = 'hidden'
-
+    // Lock scroll on BOTH html and body (html has overflow-y:scroll so body alone isn't enough)
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth
+    document.body.style.paddingRight = `${scrollbarWidth}px`
+    document.documentElement.classList.add('modal-open')
     // Hide navbar
     const nav = document.querySelector('nav') as HTMLElement | null
-    if (nav) nav.style.display = 'none'
-
+    if (nav) nav.style.visibility = 'hidden'
+    // Escape key
+    track('project_modal_opened', { project: p.name })
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    window.addEventListener('keydown', onKey)
     return () => {
-      html.style.overflow = prev
-      if (nav) nav.style.display = ''
+      document.body.style.paddingRight = ''
+      document.documentElement.classList.remove('modal-open')
+      if (nav) nav.style.visibility = ''
+      window.removeEventListener('keydown', onKey)
     }
-  }, [])
+  }, [onClose])
 
   return (
     <motion.div
@@ -109,7 +114,9 @@ function Modal({ p, onClose }: { p: typeof PROJ[0]; onClose: () => void }) {
       onClick={onClose}
       style={{
         position: 'fixed', inset: 0,
-        background: 'rgba(0,0,0,0.92)',
+        background: 'rgba(0,0,0,0.88)',
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
         zIndex: 200,
         overflowY: 'auto',
         overflowX: 'hidden',
@@ -131,15 +138,15 @@ function Modal({ p, onClose }: { p: typeof PROJ[0]; onClose: () => void }) {
           display: 'flex',
           justifyContent: 'flex-end',
           padding: '16px 12px 8px',
-          background: 'rgba(0,0,0,0.92)',
+          background: 'rgba(0,0,0,0.88)',
         }}
       >
         <button
           onClick={onClose}
           style={{
             background: 'rgba(255,255,255,0.12)',
-            border: '1.5px solid rgba(255,255,255,0.3)',
-            color: '#fff',
+            border: '1.5px solid rgba(255,255,255,0.45)',
+            color: 'rgba(255,255,255,0.9)',
             width: 48, height: 48,
             borderRadius: '50%',
             fontSize: 20,
@@ -187,10 +194,10 @@ function Modal({ p, onClose }: { p: typeof PROJ[0]; onClose: () => void }) {
           <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', marginBottom: 'clamp(14px,2vh,20px)' }} />
           <p style={{ fontSize: 'clamp(13px,1.4vw,15px)', color: 'rgba(232,237,245,0.52)', lineHeight: 1.78, fontWeight: 300, marginBottom: 'clamp(14px,2vh,22px)' }}>{p.desc}</p>
 
-          <p style={{ fontSize: 'clamp(9px,1vw,11px)', fontWeight: 600, color: 'rgba(255,255,255,0.28)', letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: 14 }}>What it does</p>
+          <p style={{ fontSize: 'clamp(9px,1vw,11px)', fontWeight: 600, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: 14 }}>What it does</p>
           <ul style={{ listStyle: 'none', marginBottom: 'clamp(16px,2.5vh,24px)' }}>
             {p.points.map((pt, i) => (
-              <li key={i} style={{ display: 'flex', gap: 10, marginBottom: 'clamp(8px,1.2vh,12px)', fontSize: 'clamp(12px,1.3vw,14px)', color: 'rgba(232,237,245,0.45)', lineHeight: 1.68, fontWeight: 300 }}>
+              <li key={i} style={{ display: 'flex', gap: 10, marginBottom: 'clamp(8px,1.2vh,12px)', fontSize: 'clamp(12px,1.3vw,14px)', color: 'rgba(232,237,245,0.55)', lineHeight: 1.68, fontWeight: 300 }}>
                 <span style={{ flexShrink: 0, width: 6, height: 6, borderRadius: '50%', background: p.ac, marginTop: 7 }} />
                 {pt}
               </li>
@@ -203,15 +210,15 @@ function Modal({ p, onClose }: { p: typeof PROJ[0]; onClose: () => void }) {
             ))}
           </div>
 
-          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', paddingBottom: 'clamp(24px,3vh,36px)', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: 20 }}>
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', paddingBottom: 'clamp(24px,3vh,36px)', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 20 }}>
             {p.github && (
-              <a href={p.github} target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ fontSize: 12, padding: '9px 18px', color: '#fff', textDecoration: 'none' }}>
+              <a href={p.github} target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ fontSize: 12, padding: '9px 18px', color: '#fff', textDecoration: 'none' }} onClick={() => track('project_github_clicked', { project: p.name })}>
                 <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
                 Clone on GitHub
               </a>
             )}
             {p.deck && (
-              <a href={p.deck} target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ fontSize: 12, padding: '9px 18px', color: '#fff', textDecoration: 'none' }}>
+              <a href={p.deck} target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ fontSize: 12, padding: '9px 18px', color: '#fff', textDecoration: 'none' }} onClick={() => track('project_casestudy_clicked', { project: p.name })}>
                 📄 View case study
               </a>
             )}
@@ -223,7 +230,7 @@ function Modal({ p, onClose }: { p: typeof PROJ[0]; onClose: () => void }) {
             {!p.github && !p.deck && !p.demo && (
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <span style={{ width: 6, height: 6, borderRadius: '50%', background: p.ac, display: 'inline-block', flexShrink: 0 }} />
-                <span style={{ fontSize: 12, color: 'rgba(232,237,245,0.32)', fontStyle: 'italic' }}>
+                <span style={{ fontSize: 12, color: 'rgba(232,237,245,0.45)', fontStyle: 'italic' }}>
                   {p.status === 'COMING SOON' ? 'In development — not yet released' : 'Internal project · NDA protected · Cannot share link or preview'}
                 </span>
               </div>
@@ -258,7 +265,7 @@ export default function Projects() {
 
         {/* Featured */}
         <motion.div {...fv} transition={{ duration: 0.7, delay: 0.1 }} style={{ marginBottom: 12 }}>
-          <Tilt depth={4} onClick={() => setModal(featured)} style={{
+          <Tilt depth={4} onClick={() => { setModal(featured); track('project_card_clicked', { project: featured.name }) }} style={{
             background: 'rgba(255,255,255,0.04)',
             border: '1px solid rgba(79,142,247,0.2)',
             borderRadius: 'clamp(16px,2vw,28px)',
@@ -315,7 +322,7 @@ export default function Projects() {
         <div className="grid-3col">
           {rest.map((p, i) => (
             <motion.div key={p.id} {...fv} transition={{ duration: 0.65, delay: 0.12 + i * 0.09 }}>
-              <Tilt onClick={() => setModal(p)} style={{
+              <Tilt onClick={() => { setModal(p); track('project_card_clicked', { project: p.name }) }} style={{
                 background: 'rgba(255,255,255,0.04)',
                 border: `1px solid ${p.status === 'COMING SOON' ? 'rgba(255,255,255,0.08)' : `${p.ac}18`}`,
                 borderRadius: 'clamp(14px,1.8vw,22px)',
@@ -333,7 +340,7 @@ export default function Projects() {
                 <h3 style={{ fontFamily: 'Syne, sans-serif', fontSize: 'clamp(15px,1.8vw,18px)', fontWeight: 700, color: '#fff', marginBottom: 10, letterSpacing: '-0.015em', lineHeight: 1.2 }}>
                   {p.name}
                 </h3>
-                <p style={{ fontSize: 'clamp(12px,1.2vw,13px)', color: 'rgba(232,237,245,0.42)', lineHeight: 1.65, fontWeight: 300, marginBottom: 'clamp(14px,2vh,18px)' }}>
+                <p style={{ fontSize: 'clamp(12px,1.2vw,13px)', color: 'rgba(232,237,245,0.55)', lineHeight: 1.65, fontWeight: 300, marginBottom: 'clamp(14px,2vh,18px)' }}>
                   {p.tagline}
                 </p>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 'clamp(12px,1.8vh,18px)' }}>

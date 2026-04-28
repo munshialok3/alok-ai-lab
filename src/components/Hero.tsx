@@ -2,6 +2,7 @@
 import { motion } from 'framer-motion'
 import { TypeAnimation } from 'react-type-animation'
 import Count from './Count'
+import { track } from '@vercel/analytics'
 
 const fd = (delay: number) => ({
   initial: { opacity: 0, y: 30 },
@@ -118,7 +119,7 @@ export default function Hero({ onResumeRequest }: { onResumeRequest: () => void 
             My journey →
           </button>
           <button
-            onClick={onResumeRequest}
+            onClick={() => { onResumeRequest(); track('resume_modal_opened', { source: 'hero' }) }}
             className="btn-ghost"
             style={{ display: 'flex', alignItems: 'center', gap: 6 }}
           >
@@ -131,6 +132,7 @@ export default function Hero({ onResumeRequest }: { onResumeRequest: () => void 
             href="https://linkedin.com/in/munshialok"
             target="_blank" rel="noopener noreferrer"
             className="btn-ghost"
+            onClick={() => track('linkedin_clicked', { source: 'hero' })}
           >
             LinkedIn ↗
           </a>

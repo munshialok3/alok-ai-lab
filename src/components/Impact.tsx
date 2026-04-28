@@ -28,7 +28,7 @@ const BIG = [
 
 const MINI = [
   { to: 24,   s: 'K+', label: 'Card acquisitions at AmEx',  c: '#4f8ef7' },
-  { to: 11,   s: '%',  label: 'Campaign ROI lift (anti-gaming)', c: '#10b981' },
+  { to: 11,   s: '%',  label: 'Campaign ROI lift', c: '#10b981' },
   { to: 45,   s: '',   label: 'Districts — KioGo startup',   c: '#f59e0b' },
   { to: 8.57, s: '',   label: 'CGPA — IIT Kharagpur',        c: '#8b5cf6' },
 ]

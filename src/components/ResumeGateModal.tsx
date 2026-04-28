@@ -1,36 +1,49 @@
 'use client'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
+import { track } from '@vercel/analytics'
 
-// ─── PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE ───────────────────────────
-const APPS_SCRIPT_URL = process.env.NEXT_PUBLIC_APPS_SCRIPT_URL!
-// ──────────────────────────────────────────────────────────────────────────────
+const APPS_SCRIPT_URL = process.env.NEXT_PUBLIC_APPS_SCRIPT_URL
 
 type Status = 'idle' | 'submitting' | 'success' | 'error'
 
 export default function ResumeGateModal({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const [name, setName]         = useState('')
-  const [email, setEmail]       = useState('')
+  const [name,     setName]     = useState('')
+  const [email,    setEmail]    = useState('')
   const [linkedin, setLinkedin] = useState('')
-  const [reason, setReason]     = useState('')
-  const [status, setStatus]     = useState<Status>('idle')
-  const [errMsg, setErrMsg]     = useState('')
+  const [reason,   setReason]   = useState('')
+  const [status,   setStatus]   = useState<Status>('idle')
+  const [errMsg,   setErrMsg]   = useState('')
+  const closeButtonRef = useRef<HTMLButtonElement>(null)
 
-  // Lock scroll + hide navbar when open
+  // Track modal open
+  useEffect(() => {
+    if (open) track('resume_modal_opened')
+  }, [open])
+
   useEffect(() => {
     if (!open) return
-    const html = document.documentElement
-    const prev = html.style.overflow
-    html.style.overflow = 'hidden'
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth
+    document.body.style.paddingRight = `${scrollbarWidth}px`
+    document.documentElement.classList.add('modal-open')
     const nav = document.querySelector('nav') as HTMLElement | null
-    if (nav) nav.style.display = 'none'
+    if (nav) nav.style.visibility = 'hidden'
+    setTimeout(() => closeButtonRef.current?.focus(), 50)
     return () => {
-      html.style.overflow = prev
-      if (nav) nav.style.display = ''
+      document.body.style.paddingRight = ''
+      document.documentElement.classList.remove('modal-open')
+      if (nav) nav.style.visibility = ''
     }
   }, [open])
 
-  // Reset form when modal closes
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    if (e.key === 'Escape' && open) onClose()
+  }, [open, onClose])
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [handleKeyDown])
+
   useEffect(() => {
     if (!open) {
       setTimeout(() => {
@@ -44,50 +57,50 @@ export default function ResumeGateModal({ open, onClose }: { open: boolean; onCl
 
   async function handleSubmit() {
     if (!valid || status === 'submitting') return
+    if (!APPS_SCRIPT_URL) {
+      setStatus('error')
+      setErrMsg('Resume request service is not configured. Please reach out directly on LinkedIn.')
+      return
+    }
     setStatus('submitting')
     setErrMsg('')
     try {
+      const controller = new AbortController()
+      const timeout = setTimeout(() => controller.abort(), 8000)
       const params = new URLSearchParams({
-        name:      name.trim(),
-        email:     email.trim().toLowerCase(),
-        linkedin:  linkedin.trim(),
-        reason:    reason.trim(),
+        name: name.trim(), email: email.trim().toLowerCase(),
+        linkedin: linkedin.trim(), reason: reason.trim(),
         timestamp: new Date().toISOString(),
       })
-      await fetch(`${APPS_SCRIPT_URL}?${params.toString()}`, {
-        method: 'GET',
-        mode: 'no-cors',
-      })
-      // no-cors means we can't read the response — assume success if no throw
+      await fetch(`${APPS_SCRIPT_URL}?${params.toString()}`, { method: 'GET', mode: 'no-cors', signal: controller.signal })
+      clearTimeout(timeout)
       setStatus('success')
-    } catch {
+      // Track successful resume request
+      track('resume_requested', {
+        has_linkedin: linkedin.trim().length > 0 ? 'yes' : 'no',
+        has_reason:   reason.trim().length > 0 ? 'yes' : 'no',
+      })
+    } catch (err) {
+      setErrMsg(err instanceof Error && err.name === 'AbortError'
+        ? 'Request timed out. Please try again or reach out directly on LinkedIn.'
+        : 'Something went wrong. Please try again or reach out directly on LinkedIn.')
       setStatus('error')
-      setErrMsg('Something went wrong. Please try again or reach out directly on LinkedIn.')
+      track('resume_request_failed')
     }
   }
 
-  const inputStyle: React.CSSProperties = {
+  const inp: React.CSSProperties = {
     width: '100%',
-    background: 'rgba(255,255,255,0.04)',
-    border: '1px solid rgba(255,255,255,0.1)',
-    borderRadius: 10,
-    padding: '11px 14px',
-    fontSize: 14,
-    color: 'rgba(232,237,245,0.88)',
-    outline: 'none',
-    transition: 'border-color .2s',
-    boxSizing: 'border-box',
-    fontFamily: 'inherit',
+    background: 'rgba(255,255,255,0.06)',
+    border: '1px solid rgba(255,255,255,0.12)',
+    borderRadius: 10, padding: '11px 14px', fontSize: 14,
+    color: '#e8edf5', outline: 'none',
+    transition: 'border-color .2s', boxSizing: 'border-box', fontFamily: 'inherit',
   }
-
-  const labelStyle: React.CSSProperties = {
-    fontSize: 11,
-    fontWeight: 600,
-    letterSpacing: '0.12em',
-    textTransform: 'uppercase',
-    color: 'rgba(232,237,245,0.35)',
-    display: 'block',
-    marginBottom: 7,
+  const lbl: React.CSSProperties = {
+    fontSize: 11, fontWeight: 600, letterSpacing: '0.12em',
+    textTransform: 'uppercase', color: 'rgba(232,237,245,0.4)',
+    display: 'block', marginBottom: 7,
   }
 
   return (
@@ -96,6 +109,7 @@ export default function ResumeGateModal({ open, onClose }: { open: boolean; onCl
         <motion.div
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
           onClick={onClose}
+          role="dialog" aria-modal="true"
           style={{
             position: 'fixed', inset: 0,
             background: 'rgba(0,0,0,0.85)',
@@ -114,30 +128,23 @@ export default function ResumeGateModal({ open, onClose }: { open: boolean; onCl
             style={{
               background: '#0a0f1e',
               border: '1px solid rgba(255,255,255,0.1)',
-              borderRadius: 24,
-              width: '100%',
-              maxWidth: 480,
-              position: 'relative',
-              overflow: 'hidden',
+              borderRadius: 24, width: '100%', maxWidth: 480,
+              position: 'relative', overflow: 'hidden',
             }}
           >
-            {/* Top accent line */}
-            <div style={{
-              position: 'absolute', top: 0, left: 0, right: 0, height: 1,
-              background: 'linear-gradient(90deg,transparent,rgba(79,142,247,0.7),transparent)',
-            }} />
-
+            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: 'linear-gradient(90deg,transparent,rgba(79,142,247,0.7),transparent)' }} />
             <div style={{ padding: 'clamp(28px,4vw,40px)' }}>
-              {/* Close */}
               <button
+                ref={closeButtonRef}
                 onClick={onClose}
+                aria-label="Close"
                 style={{
                   position: 'absolute', top: 18, right: 18,
-                  background: 'rgba(255,255,255,0.06)',
-                  border: '1px solid rgba(255,255,255,0.1)',
-                  color: 'rgba(255,255,255,0.5)',
+                  background: 'rgba(255,255,255,0.10)',
+                  border: '1px solid rgba(255,255,255,0.25)',
+                  color: 'rgba(255,255,255,0.8)',
                   width: 32, height: 32, borderRadius: '50%',
-                  fontSize: 14, cursor: 'pointer',
+                  fontSize: 15, cursor: 'pointer',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                 }}
               >✕</button>
@@ -145,146 +152,67 @@ export default function ResumeGateModal({ open, onClose }: { open: boolean; onCl
               {status !== 'success' ? (
                 <>
                   <div style={{ marginBottom: 24 }}>
-                    <p style={{
-                      fontSize: 11, fontWeight: 600, letterSpacing: '0.2em',
-                      textTransform: 'uppercase', color: '#4f8ef7', marginBottom: 10,
-                    }}>
-                      Resume Request
-                    </p>
-                    <h2 style={{
-                      fontFamily: 'Syne, sans-serif', fontSize: 'clamp(20px,3vw,24px)',
-                      fontWeight: 800, letterSpacing: '-0.03em', color: '#fff',
-                      marginBottom: 10,
-                    }}>
+                    <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#4f8ef7', marginBottom: 10 }}>Resume Request</p>
+                    <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 'clamp(20px,3vw,24px)', fontWeight: 800, letterSpacing: '-0.03em', color: '#fff', marginBottom: 10 }}>
                       Let&apos;s make sure it&apos;s a fit.
                     </h2>
-                    <p style={{
-                      fontSize: 13, color: 'rgba(232,237,245,0.4)',
-                      lineHeight: 1.65, fontWeight: 300,
-                    }}>
-                      I review every request personally and respond within 24 hours.
-                      A LinkedIn URL helps me understand the context.
+                    <p style={{ fontSize: 13, color: 'rgba(232,237,245,0.45)', lineHeight: 1.65, fontWeight: 300 }}>
+                      I review every request personally and respond within 24 hours. A LinkedIn URL helps me understand the context.
                     </p>
                   </div>
-
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                    {/* Name */}
                     <div>
-                      <label style={labelStyle}>Full Name <span style={{ color: '#4f8ef7' }}>*</span></label>
-                      <input
-                        style={inputStyle}
-                        value={name}
-                        onChange={e => setName(e.target.value)}
-                        placeholder="Jane Smith"
-                        onFocus={e => (e.target.style.borderColor = 'rgba(79,142,247,0.5)')}
-                        onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,0.1)')}
-                      />
+                      <label style={lbl}>Full Name <span style={{ color: '#4f8ef7' }}>*</span></label>
+                      <input style={inp} value={name} onChange={e => setName(e.target.value)} placeholder="Jane Smith"
+                        onFocus={e => (e.target.style.borderColor = 'rgba(79,142,247,0.6)')}
+                        onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,0.12)')} />
                     </div>
-
-                    {/* Email */}
                     <div>
-                      <label style={labelStyle}>Email <span style={{ color: '#4f8ef7' }}>*</span></label>
-                      <input
-                        style={inputStyle}
-                        type="email"
-                        value={email}
-                        onChange={e => setEmail(e.target.value)}
-                        placeholder="jane@company.com"
-                        onFocus={e => (e.target.style.borderColor = 'rgba(79,142,247,0.5)')}
-                        onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,0.1)')}
-                      />
+                      <label style={lbl}>Email <span style={{ color: '#4f8ef7' }}>*</span></label>
+                      <input style={inp} type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="jane@company.com"
+                        onFocus={e => (e.target.style.borderColor = 'rgba(79,142,247,0.6)')}
+                        onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,0.12)')} />
                     </div>
-
-                    {/* LinkedIn */}
                     <div>
-                      <label style={labelStyle}>LinkedIn URL <span style={{ color: 'rgba(232,237,245,0.22)' }}>(recommended)</span></label>
-                      <input
-                        style={inputStyle}
-                        value={linkedin}
-                        onChange={e => setLinkedin(e.target.value)}
-                        placeholder="linkedin.com/in/yourprofile"
-                        onFocus={e => (e.target.style.borderColor = 'rgba(79,142,247,0.5)')}
-                        onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,0.1)')}
-                      />
+                      <label style={lbl}>LinkedIn URL <span style={{ color: 'rgba(232,237,245,0.3)' }}>(recommended)</span></label>
+                      <input style={inp} value={linkedin} onChange={e => setLinkedin(e.target.value)} placeholder="linkedin.com/in/yourprofile"
+                        onFocus={e => (e.target.style.borderColor = 'rgba(79,142,247,0.6)')}
+                        onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,0.12)')} />
                     </div>
-
-                    {/* Reason */}
                     <div>
-                      <label style={labelStyle}>Why are you reaching out? <span style={{ color: 'rgba(232,237,245,0.22)' }}>(optional)</span></label>
-                      <textarea
-                        style={{ ...inputStyle, resize: 'none', minHeight: 80, lineHeight: 1.6 }}
-                        value={reason}
-                        onChange={e => setReason(e.target.value)}
+                      <label style={lbl}>Why are you reaching out? <span style={{ color: 'rgba(232,237,245,0.3)' }}>(optional)</span></label>
+                      <textarea style={{ ...inp, resize: 'none', minHeight: 80, lineHeight: 1.6 }}
+                        value={reason} onChange={e => setReason(e.target.value)}
                         placeholder="e.g. Hiring for a growth role at our company, exploring collaboration..."
-                        onFocus={e => (e.target.style.borderColor = 'rgba(79,142,247,0.5)')}
-                        onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,0.1)')}
-                      />
+                        onFocus={e => (e.target.style.borderColor = 'rgba(79,142,247,0.6)')}
+                        onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,0.12)')} />
                     </div>
-
-                    {errMsg && (
-                      <p style={{ fontSize: 12, color: '#f87171', lineHeight: 1.5 }}>{errMsg}</p>
-                    )}
-
+                    {errMsg && <p style={{ fontSize: 12, color: '#f87171', lineHeight: 1.5 }}>{errMsg}</p>}
                     <button
                       onClick={handleSubmit}
                       disabled={!valid || status === 'submitting'}
                       className="btn-primary"
                       style={{
-                        width: '100%',
+                        width: '100%', justifyContent: 'center', fontSize: 14, padding: '13px 0', marginTop: 4,
                         opacity: (!valid || status === 'submitting') ? 0.45 : 1,
                         cursor: (!valid || status === 'submitting') ? 'not-allowed' : 'pointer',
-                        justifyContent: 'center',
-                        fontSize: 14,
-                        padding: '13px 0',
-                        marginTop: 4,
                       }}
                     >
                       {status === 'submitting' ? 'Sending request…' : 'Request Resume →'}
                     </button>
-
-                    <p style={{
-                      fontSize: 11, color: 'rgba(232,237,245,0.2)',
-                      textAlign: 'center', lineHeight: 1.6,
-                    }}>
+                    <p style={{ fontSize: 11, color: 'rgba(232,237,245,0.22)', textAlign: 'center', lineHeight: 1.6 }}>
                       Your details are only used to evaluate this request. No spam, ever.
                     </p>
                   </div>
                 </>
               ) : (
-                /* Success state */
-                <motion.div
-                  initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
-                  style={{ textAlign: 'center', padding: '16px 0 8px' }}
-                >
-                  <div style={{
-                    width: 56, height: 56, borderRadius: '50%',
-                    background: 'rgba(16,185,129,0.1)',
-                    border: '1px solid rgba(16,185,129,0.3)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 24, margin: '0 auto 20px',
-                  }}>
-                    ✓
-                  </div>
-                  <h2 style={{
-                    fontFamily: 'Syne, sans-serif', fontSize: 22,
-                    fontWeight: 800, color: '#fff', marginBottom: 12,
-                  }}>
-                    Request received.
-                  </h2>
-                  <p style={{
-                    fontSize: 14, color: 'rgba(232,237,245,0.45)',
-                    lineHeight: 1.7, fontWeight: 300, maxWidth: 340, margin: '0 auto 28px',
-                  }}>
-                    I review every request personally. If it&apos;s a fit, you&apos;ll get my resume
-                    directly in your inbox — typically within 24 hours.
+                <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} style={{ textAlign: 'center', padding: '16px 0 8px' }}>
+                  <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, margin: '0 auto 20px' }}>✓</div>
+                  <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 22, fontWeight: 800, color: '#fff', marginBottom: 12 }}>Request received.</h2>
+                  <p style={{ fontSize: 14, color: 'rgba(232,237,245,0.45)', lineHeight: 1.7, fontWeight: 300, maxWidth: 340, margin: '0 auto 28px' }}>
+                    I review every request personally. If it&apos;s a fit, you&apos;ll get my resume directly in your inbox — typically within 24 hours.
                   </p>
-                  <button
-                    onClick={onClose}
-                    className="btn-ghost"
-                    style={{ fontSize: 13, padding: '10px 24px' }}
-                  >
-                    Close
-                  </button>
+                  <button onClick={onClose} className="btn-ghost" style={{ fontSize: 13, padding: '10px 24px' }}>Close</button>
                 </motion.div>
               )}
             </div>
