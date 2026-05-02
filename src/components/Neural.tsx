@@ -5,16 +5,27 @@ export default function Neural() {
   const ref = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
-    const cv = ref.current!
-    const cx = cv.getContext('2d')!
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    const cv = ref.current
+    if (!cv) return
+    const cx = cv.getContext('2d')
+    if (!cx) return
+
     let W = 0, H = 0, raf = 0
+    let resizeTimer: ReturnType<typeof setTimeout>
 
     const resize = () => {
       W = cv.width  = window.innerWidth
       H = cv.height = window.innerHeight
     }
     resize()
-    window.addEventListener('resize', resize, { passive: true })
+
+    const debouncedResize = () => {
+      clearTimeout(resizeTimer)
+      resizeTimer = setTimeout(resize, 150)
+    }
+    window.addEventListener('resize', debouncedResize, { passive: true })
 
     const COUNT = Math.min(70, Math.floor((window.innerWidth * window.innerHeight) / 14000))
     const pts = Array.from({ length: COUNT }, () => ({
@@ -35,7 +46,7 @@ export default function Neural() {
         for (let j = i + 1; j < pts.length; j++) {
           const q = pts[j]
           const dx = p.x - q.x, dy = p.y - q.y
-          const d2 = dx*dx + dy*dy
+          const d2 = dx * dx + dy * dy
           if (d2 < DIST * DIST) {
             const d = Math.sqrt(d2)
             cx.beginPath()
@@ -56,9 +67,10 @@ export default function Neural() {
 
     return () => {
       cancelAnimationFrame(raf)
-      window.removeEventListener('resize', resize)
+      clearTimeout(resizeTimer)
+      window.removeEventListener('resize', debouncedResize)
     }
   }, [])
 
-  return <canvas ref={ref} id="neural-bg" />
+  return <canvas ref={ref} id="neural-bg" aria-hidden="true" />
 }

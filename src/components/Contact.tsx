@@ -29,9 +29,9 @@ const inp: React.CSSProperties = {
   boxSizing: 'border-box',
 }
 
-function Label({ children }: { children: React.ReactNode }) {
+function Label({ children, htmlFor }: { children: React.ReactNode; htmlFor?: string }) {
   return (
-    <label style={{
+    <label htmlFor={htmlFor} style={{
       display: 'block', fontSize: 11, fontWeight: 600,
       letterSpacing: '0.1em', color: 'rgba(232,237,245,0.35)',
       textTransform: 'uppercase', marginBottom: 7,
@@ -61,6 +61,9 @@ export default function Contact() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ;(window as any).emailjs.init(EMAILJS_PUBLIC_KEY)
       setEjsReady(true)
+    }
+    s.onerror = () => {
+      console.warn('EmailJS failed to load — direct send will be unavailable.')
     }
     document.head.appendChild(s)
   }, [])
@@ -287,31 +290,31 @@ export default function Contact() {
 
               <div className="contact-row">
                 <Field>
-                  <Label>Your name *</Label>
-                  <input name="name" value={form.name} onChange={ch} onFocus={focusOn} onBlur={focusOff} placeholder="Jane Smith" style={inp} />
+                  <Label htmlFor="ct-name">Your name *</Label>
+                  <input id="ct-name" name="name" value={form.name} onChange={ch} onFocus={focusOn} onBlur={focusOff} placeholder="Jane Smith" style={inp} maxLength={100} autoComplete="name" />
                 </Field>
                 <Field>
-                  <Label>Your email *</Label>
-                  <input name="email" type="email" value={form.email} onChange={ch} onFocus={focusOn} onBlur={focusOff} placeholder="jane@company.com" style={inp} />
+                  <Label htmlFor="ct-email">Your email *</Label>
+                  <input id="ct-email" name="email" type="email" value={form.email} onChange={ch} onFocus={focusOn} onBlur={focusOff} placeholder="jane@company.com" style={inp} maxLength={254} autoComplete="email" />
                 </Field>
               </div>
 
               <div className="contact-row">
                 <Field>
-                  <Label>Phone / WhatsApp</Label>
-                  <input name="phone" value={form.phone} onChange={ch} onFocus={focusOn} onBlur={focusOff} placeholder="+91 xxxxx xxxxx" style={inp} />
+                  <Label htmlFor="ct-phone">Phone / WhatsApp</Label>
+                  <input id="ct-phone" name="phone" value={form.phone} onChange={ch} onFocus={focusOn} onBlur={focusOff} placeholder="+91 xxxxx xxxxx" style={inp} maxLength={30} autoComplete="tel" />
                 </Field>
                 <Field>
-                  <Label>Subject *</Label>
-                  <input name="subject" value={form.subject} onChange={ch} onFocus={focusOn} onBlur={focusOff} placeholder="Growth role at [Company]" style={inp} />
+                  <Label htmlFor="ct-subject">Subject *</Label>
+                  <input id="ct-subject" name="subject" value={form.subject} onChange={ch} onFocus={focusOn} onBlur={focusOff} placeholder="Growth role at [Company]" style={inp} maxLength={200} />
                 </Field>
               </div>
 
               <Field>
-                <Label>Message *</Label>
-                <textarea name="body" value={form.body} onChange={ch} onFocus={focusOn} onBlur={focusOff}
+                <Label htmlFor="ct-body">Message *</Label>
+                <textarea id="ct-body" name="body" value={form.body} onChange={ch} onFocus={focusOn} onBlur={focusOff}
                   rows={5} placeholder="Tell me about what you're working on, the challenge you're facing, or the role you have in mind..."
-                  style={{ ...inp, resize: 'vertical', minHeight: 120, lineHeight: 1.6 }} />
+                  style={{ ...inp, resize: 'vertical', minHeight: 120, lineHeight: 1.6 }} maxLength={2000} />
               </Field>
 
               {status === 'sent' && (
@@ -354,8 +357,12 @@ export default function Contact() {
 
         {/* ── Footer ── */}
         <div style={{ marginTop: 'clamp(60px,8vh,100px)', paddingTop: 'clamp(20px,3vh,32px)', borderTop: '1px solid rgba(255,255,255,0.04)', textAlign: 'center' }}>
-          <p style={{ fontSize: 'clamp(10px,1.1vw,12px)', color: 'rgba(232,237,245,0.2)', letterSpacing: '0.12em', fontWeight: 500, textTransform: 'uppercase' }}>
+          <p style={{ fontSize: 'clamp(10px,1.1vw,12px)', color: 'rgba(232,237,245,0.2)', letterSpacing: '0.12em', fontWeight: 500, textTransform: 'uppercase', marginBottom: 10 }}>
             Alok Munshi · Gurugram, India · IIT Kharagpur &apos;22 · Eternal · American Express · OYO
+          </p>
+          <p style={{ fontSize: 11, color: 'rgba(232,237,245,0.15)' }}>
+            <a href="/privacy" style={{ color: 'rgba(232,237,245,0.28)', textDecoration: 'none' }}>Privacy Policy</a>
+            {' · '}Form submissions are used only to respond to your enquiry.
           </p>
         </div>
       </div>

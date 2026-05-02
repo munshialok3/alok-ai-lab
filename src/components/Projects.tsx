@@ -25,25 +25,29 @@ const PROJ = [
     github: 'https://github.com/munshialok3/whatsapp-campaign-engine',
     deck: 'https://github.com/munshialok3/whatsapp-campaign-engine/raw/main/WA_CaseStudy.pdf',
     demo: null,
+    portfolioUrl: null,
   },
   {
-    id: 'resume', icon: '📄', name: 'AI Resume Builder',
-    tagline: 'Parses resumes, rewrites in STAR format, generates ATS-optimised output',
-    status: 'COMING SOON', sc: '#4f8ef7', ac: '#4f8ef7', featured: false,
-    stack: ['Next.js', 'Claude API', 'TypeScript', 'Tailwind'],
-    metrics: [{ v: 'AI', l: 'Powered' }, { v: 'ATS', l: 'Optimised' }, { v: 'STAR', l: 'Framework' }, { v: '~0', l: 'Manual work' }],
-    desc: 'Built on the belief that most people undersell themselves on paper. Parses raw resume content, restructures achievements into STAR bullets, and generates polished ATS-optimised output — powered by Claude.',
+    id: 'amd', icon: '🤖', name: "Arjun's Money Diaries Engine",
+    tagline: 'Automated LinkedIn content pipeline — AI writes, you approve with one word, it posts',
+    status: 'LIVE', sc: '#4f8ef7', ac: '#4f8ef7', featured: false,
+    stack: ['n8n', 'Claude AI', 'Telegram Bot', 'LinkedIn API', 'Google Sheets'],
+    metrics: [{ v: '44', l: 'Episodes' }, { v: '48h', l: 'Auto-cycle' }, { v: '1 word', l: 'To approve' }, { v: '~$0', l: 'Infra cost' }],
+    desc: 'A fully automated LinkedIn content engine for a serialised personal finance series. Claude writes every episode, a quality check validates it, you approve from Telegram with one word — APPROVE, REJECT, REGENERATE, or EDIT. It posts to LinkedIn, tracks analytics, and queues the next draft automatically.',
     points: [
-      'Upload any resume — PDF or text — and get a fully restructured version back',
-      'Rewrites every bullet into STAR / XYZ impact format automatically',
-      'Paste a job description to get ATS keyword-optimised output tailored to the role',
-      'Tone and seniority controls to match the role and industry',
-      'Professional, recruiter-ready output in under 30 seconds',
+      'Claude API generates 220–280 word story episodes using a detailed Story Bible and character guide as system prompt',
+      'Quality check validates word count, dialogue presence, hashtags, and episode teaser before delivery',
+      'Draft sent to Telegram — approve, reject, regenerate, or inline-edit with a single reply from your phone',
+      'Approved episodes post directly to LinkedIn via LinkedIn API, zero copy-pasting',
+      'Google Sheets tracks every episode: status, concept used, draft history, and daily engagement analytics',
+      'Watchdog workflow re-alerts if an episode is stuck in pending_approval for too long',
+      'Analytics workflow pulls LinkedIn likes and comments every day and syncs back to the Sheet automatically',
     ],
-    built: 'Building now · 2026',
-    github: null,
+    built: 'Solo · 2026',
+    github: 'https://github.com/munshialok3/arjun-money-diaries',
     deck: null,
     demo: null,
+    portfolioUrl: '/money-diaries',
   },
   {
     id: 'intel', icon: '📊', name: 'Competitive Intel Dashboard',
@@ -64,6 +68,7 @@ const PROJ = [
     github: null,
     deck: null,
     demo: null,
+    portfolioUrl: null,
   },
   {
     id: 'decision', icon: '🎯', name: 'Decision Management Interface',
@@ -84,34 +89,35 @@ const PROJ = [
     github: null,
     deck: null,
     demo: null,
+    portfolioUrl: null,
   },
 ]
 
 function Modal({ p, onClose }: { p: typeof PROJ[0]; onClose: () => void }) {
   useEffect(() => {
-    // Lock scroll on BOTH html and body (html has overflow-y:scroll so body alone isn't enough)
     const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth
     document.body.style.paddingRight = `${scrollbarWidth}px`
     document.documentElement.classList.add('modal-open')
-    // Hide navbar
     const nav = document.querySelector('nav') as HTMLElement | null
-    if (nav) nav.style.visibility = 'hidden'
-    // Escape key
+    if (nav) nav.classList.add('nav-modal-hidden')
     track('project_modal_opened', { project: p.name })
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
     window.addEventListener('keydown', onKey)
     return () => {
       document.body.style.paddingRight = ''
       document.documentElement.classList.remove('modal-open')
-      if (nav) nav.style.visibility = ''
+      if (nav) nav.classList.remove('nav-modal-hidden')
       window.removeEventListener('keydown', onKey)
     }
-  }, [onClose])
+  }, [onClose, p.name])
 
   return (
     <motion.div
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-label={p.name}
       style={{
         position: 'fixed', inset: 0,
         background: 'rgba(0,0,0,0.88)',
@@ -211,6 +217,11 @@ function Modal({ p, onClose }: { p: typeof PROJ[0]; onClose: () => void }) {
           </div>
 
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', paddingBottom: 'clamp(24px,3vh,36px)', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 20 }}>
+            {p.portfolioUrl && (
+              <a href={p.portfolioUrl} className="btn-primary" style={{ fontSize: 12, padding: '9px 18px', color: '#fff', textDecoration: 'none' }} onClick={() => track('project_episodes_clicked', { project: p.name })}>
+                📚 View all episodes →
+              </a>
+            )}
             {p.github && (
               <a href={p.github} target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ fontSize: 12, padding: '9px 18px', color: '#fff', textDecoration: 'none' }} onClick={() => track('project_github_clicked', { project: p.name })}>
                 <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
@@ -227,7 +238,7 @@ function Modal({ p, onClose }: { p: typeof PROJ[0]; onClose: () => void }) {
                 ↗ Live demo
               </a>
             )}
-            {!p.github && !p.deck && !p.demo && (
+            {!p.portfolioUrl && !p.github && !p.deck && !p.demo && (
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <span style={{ width: 6, height: 6, borderRadius: '50%', background: p.ac, display: 'inline-block', flexShrink: 0 }} />
                 <span style={{ fontSize: 12, color: 'rgba(232,237,245,0.45)', fontStyle: 'italic' }}>

@@ -1,6 +1,7 @@
 'use client'
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import dynamic from 'next/dynamic'
+import { MotionConfig } from 'framer-motion'
 import Navbar from '@/components/Navbar'
 import Hero from '@/components/Hero'
 import About from '@/components/About'
@@ -10,6 +11,8 @@ import Journey from '@/components/Journey'
 import Skills from '@/components/Skills'
 import Contact from '@/components/Contact'
 import ResumeGateModal from '@/components/ResumeGateModal'
+import ErrorBoundary from '@/components/ErrorBoundary'
+import ScrollDepthTracker from '@/components/ScrollDepthTracker'
 
 const Neural = dynamic(() => import('@/components/Neural'), { ssr: false })
 const Cursor = dynamic(() => import('@/components/Cursor'),  { ssr: false })
@@ -18,29 +21,38 @@ export default function Home() {
   const [resumeOpen, setResumeOpen] = useState(false)
 
   return (
-    <main style={{ position: 'relative', minHeight: '100vh', overflowX: 'hidden' }}>
-      <div className="mesh-bg" />
-      <div className="grain" />
-      <Neural />
-      <Cursor />
+    <ErrorBoundary>
+      <MotionConfig reducedMotion="user">
+        <main style={{ position: 'relative', minHeight: '100vh', overflowX: 'hidden' }}>
+          <div className="mesh-bg" />
+          <div className="grain" />
+          <Suspense fallback={null}>
+            <Neural />
+          </Suspense>
+          <Suspense fallback={null}>
+            <Cursor />
+          </Suspense>
 
-      <Navbar onResumeRequest={() => setResumeOpen(true)} />
+          <ScrollDepthTracker />
+          <Navbar onResumeRequest={() => setResumeOpen(true)} />
 
-      <Hero onResumeRequest={() => setResumeOpen(true)} />
-      <div className="divider" />
-      <About />
-      <div className="divider" />
-      <Impact />
-      <div className="divider" />
-      <Projects />
-      <div className="divider" />
-      <Journey />
-      <div className="divider" />
-      <Skills />
-      <div className="divider" />
-      <Contact />
+          <Hero onResumeRequest={() => setResumeOpen(true)} />
+          <div className="divider" />
+          <About />
+          <div className="divider" />
+          <Impact />
+          <div className="divider" />
+          <Projects />
+          <div className="divider" />
+          <Journey />
+          <div className="divider" />
+          <Skills />
+          <div className="divider" />
+          <Contact />
 
-      <ResumeGateModal open={resumeOpen} onClose={() => setResumeOpen(false)} />
-    </main>
+          <ResumeGateModal open={resumeOpen} onClose={() => setResumeOpen(false)} />
+        </main>
+      </MotionConfig>
+    </ErrorBoundary>
   )
 }

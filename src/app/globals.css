@@ -14,7 +14,7 @@
   --amber: #f59e0b;
   --text: #e8edf5;
   --muted: rgba(232,237,245,0.55);
-  --dim: rgba(232,237,245,0.28);
+  --dim: rgba(232,237,245,0.42);
   --border: rgba(255,255,255,0.08);
   --border2: rgba(255,255,255,0.15);
   --surface: rgba(255,255,255,0.04);
@@ -305,6 +305,46 @@ body {
 
 /* ── Tilt ── */
 .tilt-card { transform-style: preserve-3d; will-change: transform; transition: transform .55s cubic-bezier(0.16,1,0.3,1); }
+
+/* ── Focus visible — keyboard navigation accessibility ── */
+:focus { outline: none; }
+:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+button:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 3px;
+}
+.btn-primary:focus-visible,
+.btn-ghost:focus-visible {
+  outline: 2px solid var(--blue2);
+  outline-offset: 3px;
+  border-radius: 100px;
+}
+
+/* ── Navbar modal-hidden state (CSS class, not inline style) ── */
+nav.nav-modal-hidden {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* ── prefers-reduced-motion ── */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .ticker-track { animation: none !important; }
+  #neural-bg { display: none !important; }
+  .tilt-card { transform: none !important; transition: none !important; }
+}
 
 /* ── Animations ── */
 @keyframes riseIn { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }

@@ -27,12 +27,12 @@ export default function ResumeGateModal({ open, onClose }: { open: boolean; onCl
     document.body.style.paddingRight = `${scrollbarWidth}px`
     document.documentElement.classList.add('modal-open')
     const nav = document.querySelector('nav') as HTMLElement | null
-    if (nav) nav.style.visibility = 'hidden'
+    if (nav) nav.classList.add('nav-modal-hidden')
     setTimeout(() => closeButtonRef.current?.focus(), 50)
     return () => {
       document.body.style.paddingRight = ''
       document.documentElement.classList.remove('modal-open')
-      if (nav) nav.style.visibility = ''
+      if (nav) nav.classList.remove('nav-modal-hidden')
     }
   }, [open])
 
@@ -162,32 +162,36 @@ export default function ResumeGateModal({ open, onClose }: { open: boolean; onCl
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                     <div>
-                      <label style={lbl}>Full Name <span style={{ color: '#4f8ef7' }}>*</span></label>
-                      <input style={inp} value={name} onChange={e => setName(e.target.value)} placeholder="Jane Smith"
+                      <label htmlFor="rg-name" style={lbl}>Full Name <span style={{ color: '#4f8ef7' }}>*</span></label>
+                      <input id="rg-name" style={inp} value={name} onChange={e => setName(e.target.value)} placeholder="Jane Smith"
+                        maxLength={100} autoComplete="name"
                         onFocus={e => (e.target.style.borderColor = 'rgba(79,142,247,0.6)')}
                         onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,0.12)')} />
                     </div>
                     <div>
-                      <label style={lbl}>Email <span style={{ color: '#4f8ef7' }}>*</span></label>
-                      <input style={inp} type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="jane@company.com"
+                      <label htmlFor="rg-email" style={lbl}>Email <span style={{ color: '#4f8ef7' }}>*</span></label>
+                      <input id="rg-email" style={inp} type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="jane@company.com"
+                        maxLength={254} autoComplete="email"
                         onFocus={e => (e.target.style.borderColor = 'rgba(79,142,247,0.6)')}
                         onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,0.12)')} />
                     </div>
                     <div>
-                      <label style={lbl}>LinkedIn URL <span style={{ color: 'rgba(232,237,245,0.3)' }}>(recommended)</span></label>
-                      <input style={inp} value={linkedin} onChange={e => setLinkedin(e.target.value)} placeholder="linkedin.com/in/yourprofile"
+                      <label htmlFor="rg-linkedin" style={lbl}>LinkedIn URL <span style={{ color: 'rgba(232,237,245,0.3)' }}>(recommended)</span></label>
+                      <input id="rg-linkedin" style={inp} value={linkedin} onChange={e => setLinkedin(e.target.value)} placeholder="linkedin.com/in/yourprofile"
+                        maxLength={200}
                         onFocus={e => (e.target.style.borderColor = 'rgba(79,142,247,0.6)')}
                         onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,0.12)')} />
                     </div>
                     <div>
-                      <label style={lbl}>Why are you reaching out? <span style={{ color: 'rgba(232,237,245,0.3)' }}>(optional)</span></label>
-                      <textarea style={{ ...inp, resize: 'none', minHeight: 80, lineHeight: 1.6 }}
+                      <label htmlFor="rg-reason" style={lbl}>Why are you reaching out? <span style={{ color: 'rgba(232,237,245,0.3)' }}>(optional)</span></label>
+                      <textarea id="rg-reason" style={{ ...inp, resize: 'none', minHeight: 80, lineHeight: 1.6 }}
                         value={reason} onChange={e => setReason(e.target.value)}
                         placeholder="e.g. Hiring for a growth role at our company, exploring collaboration..."
+                        maxLength={1000}
                         onFocus={e => (e.target.style.borderColor = 'rgba(79,142,247,0.6)')}
                         onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,0.12)')} />
                     </div>
-                    {errMsg && <p style={{ fontSize: 12, color: '#f87171', lineHeight: 1.5 }}>{errMsg}</p>}
+                    {errMsg && <p role="alert" style={{ fontSize: 12, color: '#f87171', lineHeight: 1.5 }}>{errMsg}</p>}
                     <button
                       onClick={handleSubmit}
                       disabled={!valid || status === 'submitting'}
@@ -201,7 +205,8 @@ export default function ResumeGateModal({ open, onClose }: { open: boolean; onCl
                       {status === 'submitting' ? 'Sending request…' : 'Request Resume →'}
                     </button>
                     <p style={{ fontSize: 11, color: 'rgba(232,237,245,0.22)', textAlign: 'center', lineHeight: 1.6 }}>
-                      Your details are only used to evaluate this request. No spam, ever.
+                      Your details are only used to evaluate this request. No spam, ever.{' '}
+                      <a href="/privacy" style={{ color: 'rgba(232,237,245,0.35)', textDecoration: 'underline' }}>Privacy policy</a>
                     </p>
                   </div>
                 </>
