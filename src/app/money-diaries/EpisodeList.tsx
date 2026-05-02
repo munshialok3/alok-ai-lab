@@ -45,46 +45,37 @@ function EpisodeModal({ ep, onClose }: { ep: Episode; onClose: () => void }) {
         zIndex: 300,
         overflowY: 'auto', overflowX: 'hidden',
         display: 'flex', flexDirection: 'column', alignItems: 'center',
+        padding: 'clamp(20px,3vw,48px) 0 48px',
       }}
     >
-      {/* Sticky close bar */}
-      <div
-        onClick={e => e.stopPropagation()}
-        style={{
-          position: 'sticky', top: 0, zIndex: 10,
-          width: '100%', maxWidth: 'min(660px, 95vw)',
-          display: 'flex', justifyContent: 'flex-end',
-          padding: '16px 12px 8px',
-          background: 'rgba(0,0,0,0.9)',
-        }}
-      >
-        <button
-          onClick={onClose}
-          aria-label="Close"
-          style={{
-            background: 'rgba(255,255,255,0.12)',
-            border: '1.5px solid rgba(255,255,255,0.4)',
-            color: 'rgba(255,255,255,0.9)',
-            width: 44, height: 44, borderRadius: '50%',
-            fontSize: 18, cursor: 'pointer',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            flexShrink: 0,
-          }}
-        >✕</button>
-      </div>
-
-      {/* Modal card */}
+      {/* Modal card — close button lives inside, no stacking context conflict */}
       <div
         onClick={e => e.stopPropagation()}
         style={{
           width: '100%', maxWidth: 'min(660px, 95vw)',
-          margin: '0 auto 48px',
+          margin: '0 auto',
           background: '#0a0f1e',
           border: '1px solid rgba(255,255,255,0.1)',
           borderRadius: 'clamp(16px,2vw,24px)',
           overflow: 'hidden',
+          position: 'relative',
         }}
       >
+        {/* Close button — inside the card */}
+        <button
+          onClick={onClose}
+          aria-label="Close"
+          style={{
+            position: 'absolute', top: 14, right: 14, zIndex: 2,
+            background: 'rgba(255,255,255,0.10)',
+            border: '1.5px solid rgba(255,255,255,0.35)',
+            color: 'rgba(255,255,255,0.85)',
+            width: 38, height: 38, borderRadius: '50%',
+            fontSize: 16, cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            flexShrink: 0,
+          }}
+        >✕</button>
         {/* Top accent line */}
         <div style={{ height: 1, background: 'linear-gradient(90deg,transparent,rgba(79,142,247,0.6),transparent)' }} />
 

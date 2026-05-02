@@ -130,54 +130,37 @@ function Modal({ p, onClose }: { p: typeof PROJ[0]; onClose: () => void }) {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        padding: 'clamp(20px,3vw,48px) 0 48px',
       }}
     >
-      {/* Close bar — sticky at top of the scrollable overlay, always in view */}
-      <div
-        onClick={e => e.stopPropagation()}
-        style={{
-          position: 'sticky',
-          top: 0,
-          zIndex: 10,
-          width: '100%',
-          maxWidth: 'min(680px, 95vw)',
-          display: 'flex',
-          justifyContent: 'flex-end',
-          padding: '16px 12px 8px',
-          background: 'rgba(0,0,0,0.88)',
-        }}
-      >
-        <button
-          onClick={onClose}
-          style={{
-            background: 'rgba(255,255,255,0.12)',
-            border: '1.5px solid rgba(255,255,255,0.45)',
-            color: 'rgba(255,255,255,0.9)',
-            width: 48, height: 48,
-            borderRadius: '50%',
-            fontSize: 20,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            cursor: 'pointer',
-            flexShrink: 0,
-            WebkitTapHighlightColor: 'transparent',
-          } as React.CSSProperties}
-          aria-label="Close"
-        >✕</button>
-      </div>
-
-      {/* Modal card */}
+      {/* Modal card — close button lives inside so no stacking context conflict */}
       <div
         onClick={e => e.stopPropagation()}
         style={{
           width: '100%',
           maxWidth: 'min(680px, 95vw)',
-          margin: '0 auto 40px',
+          margin: '0 auto',
           background: '#0a0f1e',
           border: '1px solid rgba(255,255,255,0.1)',
           borderRadius: 'clamp(16px,2vw,28px)',
           position: 'relative',
         }}
       >
+        {/* Close button — inside the card, no separate stacking context */}
+        <button
+          onClick={onClose}
+          aria-label="Close"
+          style={{
+            position: 'absolute', top: 16, right: 16, zIndex: 2,
+            background: 'rgba(255,255,255,0.10)',
+            border: '1.5px solid rgba(255,255,255,0.35)',
+            color: 'rgba(255,255,255,0.85)',
+            width: 40, height: 40, borderRadius: '50%', fontSize: 17,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            cursor: 'pointer', flexShrink: 0,
+            WebkitTapHighlightColor: 'transparent',
+          } as React.CSSProperties}
+        >✕</button>
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: `linear-gradient(90deg,transparent,${p.ac}80,transparent)` }} />
         <div style={{ padding: 'clamp(24px,3vw,40px)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'clamp(16px,2.5vh,24px)', gap: 12 }}>

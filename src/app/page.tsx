@@ -15,7 +15,6 @@ import ErrorBoundary from '@/components/ErrorBoundary'
 import ScrollDepthTracker from '@/components/ScrollDepthTracker'
 
 const Neural = dynamic(() => import('@/components/Neural'), { ssr: false })
-const Cursor = dynamic(() => import('@/components/Cursor'),  { ssr: false })
 
 export default function Home() {
   const [resumeOpen, setResumeOpen] = useState(false)
@@ -28,9 +27,6 @@ export default function Home() {
           <div className="grain" />
           <Suspense fallback={null}>
             <Neural />
-          </Suspense>
-          <Suspense fallback={null}>
-            <Cursor />
           </Suspense>
 
           <ScrollDepthTracker />
