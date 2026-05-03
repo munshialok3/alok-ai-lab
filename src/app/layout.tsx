@@ -78,6 +78,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="google-site-verification" content="TSfQXEnKhJm2yp7Jj6JMNeDa7SHdEbVnYqJHb2wKLRo" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="alternate" type="application/rss+xml" title="Alok Munshi — Writing" href="/writing/rss.xml" />
+        <link rel="alternate" type="application/rss+xml" title="Arjun's Money Diaries" href="/money-diaries/rss.xml" />   
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
