@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { getPostBySlug, getAllPosts } from '@/lib/writing'
+import { getPostBySlug, getAllPosts, getPostColor } from '@/lib/writing'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
@@ -18,17 +18,14 @@ export function generateMetadata({ params }: Props): Metadata {
 
   return {
     title: `${post.title} — Alok Munshi`,
-    description: post.description,
-  }
+    description: post.description,}
 }
 
 export default function WritingPost({ params }: Props) {
   const post = getPostBySlug(params.slug)
   if (!post || !post.published) notFound()
 
-  const colors = ['#4f8ef7', '#8b5cf6', '#10b981', '#f59e0b']
-  const tagHash = post.tags.length > 0 ? post.tags[0].length % colors.length : 0
-  const col = colors[tagHash]
+  const col = getPostColor(post.slug)
 
   return (
     <div style={{
@@ -62,7 +59,7 @@ export default function WritingPost({ params }: Props) {
           <h1 style={{
             fontFamily: 'Syne, sans-serif', fontWeight: 800,
             fontSize: 'clamp(28px,5vw,44px)', letterSpacing: '-0.03em',
-            lineHeight: 1.1, color: '#fff',marginBottom: 12,
+            lineHeight: 1.1, color: '#fff', marginBottom: 12,
           }}>
             {post.title}
           </h1>
@@ -110,7 +107,8 @@ export default function WritingPost({ params }: Props) {
             fontSize: 'clamp(15px,1.4vw,17px)',
             color: 'rgba(232,237,245,0.7)',
             lineHeight: 1.85,
-            fontWeight: 300,}}
+            fontWeight: 300,
+          }}
           dangerouslySetInnerHTML={{ __html: renderMarkdown(post.content) }}
         />
 
@@ -121,8 +119,8 @@ export default function WritingPost({ params }: Props) {
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
         }}>
           <Link href="/writing" style={{
-            fontSize: 13, color: col, fontWeight: 600, textDecoration: 'none',}}>
-            ← All posts
+            fontSize: 13, color: col, fontWeight: 600, textDecoration: 'none',
+          }}>← All posts
           </Link>
           <Link href="/" style={{
             fontSize: 13, color: 'rgba(232,237,245,0.4)', textDecoration: 'none',

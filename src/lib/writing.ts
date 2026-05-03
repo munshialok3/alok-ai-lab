@@ -30,7 +30,7 @@ export function getAllPosts(): Post[] {
 
     return {
       slug,
-      title: data.title || 'Untitled',
+      title: data.title ||'Untitled',
       description: data.description || '',
       date: data.date || '',
       tags: data.tags || [],
@@ -40,8 +40,7 @@ export function getAllPosts(): Post[] {
     }
   })
 
-  return posts
-    .filter(p => p.published)
+  return posts.filter(p => p.published)
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 }
 
@@ -63,4 +62,19 @@ export function getPostBySlug(slug: string): Post | null {
     readingTime: rt.text,
     content,
   }
+}
+
+export function getPostColor(slug: string): string {
+  const colors = ['#4f8ef7', '#8b5cf6', '#10b981', '#f59e0b']
+  const posts = getAllPosts()
+  const index = posts.findIndex(p => p.slug === slug)
+  if (index === -1) {
+    let hash = 0
+    for (let i = 0; i < slug.length; i++) {
+      hash = ((hash << 5) - hash) + slug.charCodeAt(i)
+      hash |= 0
+    }
+    return colors[Math.abs(hash) % colors.length]
+  }
+  return colors[index % colors.length]
 }

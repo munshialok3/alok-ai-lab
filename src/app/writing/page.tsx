@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { getAllPosts } from '@/lib/writing'
+import { getAllPosts, getPostColor } from '@/lib/writing'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
@@ -17,9 +17,7 @@ export default function WritingPage() {
       color: '#e8edf5',
       fontFamily: "'DM Sans', system-ui, -apple-system, sans-serif",
     }}>
-      <div style={{ padding: 'clamp(60px,8vw,100px) clamp(20px,5vw,40px) clamp(48px,6vw,80px)', maxWidth: 1080, margin: '0 auto' }}>
-
-        <Link href="/" style={{
+      <div style={{ padding: 'clamp(60px,8vw,100px) clamp(20px,5vw,40px) clamp(48px,6vw,80px)', maxWidth: 1080, margin: '0 auto' }}><Link href="/" style={{
           display: 'inline-flex', alignItems: 'center', gap: 6,
           fontSize: 13, color: 'rgba(232,237,245,0.4)',
           textDecoration: 'none', marginBottom: 44,
@@ -58,7 +56,8 @@ export default function WritingPage() {
           <div style={{
             textAlign: 'center', padding: 'clamp(60px,10vw,100px) 20px',
             background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)',
-            borderRadius: 24,}}>
+            borderRadius: 24,
+          }}>
             <div style={{ fontSize: 32, marginBottom: 16 }}>✍️</div>
             <p style={{ fontFamily: 'Syne, sans-serif', fontWeight: 700, fontSize: 18, color: '#fff', marginBottom: 10 }}>
               Coming soon
@@ -73,9 +72,8 @@ export default function WritingPage() {
             gridTemplateColumns: 'repeat(auto-fill, minmax(min(340px, 100%), 1fr))',
             gap: 'clamp(12px,1.8vw,18px)',
           }}>
-            {posts.map((post, i) => {
-              const colors = ['#4f8ef7', '#8b5cf6', '#10b981', '#f59e0b']
-              const col = colors[i % colors.length]
+            {posts.map(post => {
+              const col = getPostColor(post.slug)
 
               return (
                 <Link
@@ -91,7 +89,7 @@ export default function WritingPage() {
                     textDecoration: 'none',
                     position: 'relative',
                     overflow: 'hidden',
-                transition: 'border-color .3s, background .3s, transform .2s',
+                    transition: 'border-color .3s, background .3s, transform .2s',
                     minHeight: 220,
                   }}
                 >
@@ -150,13 +148,13 @@ export default function WritingPage() {
                   )}
 
                   {/* Tags + read link */}
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 12 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 12}}>
                     <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                       {post.tags.map(tag => (
                         <span key={tag} style={{
                           display: 'inline-block',
                           padding: '3px 9px',
-                          borderRadius:100,
+                          borderRadius: 100,
                           fontSize: 10,
                           fontWeight: 600,
                           background: `${col}12`,
