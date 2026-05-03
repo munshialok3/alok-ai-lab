@@ -22,7 +22,7 @@ export default function Home() {
   return (
     <ErrorBoundary>
       <MotionConfig reducedMotion="user">
-        <main style={{ position: 'relative', minHeight: '100vh', overflowX: 'hidden' }}>
+        <main id="main-content" style={{ position: 'relative', minHeight: '100vh', overflowX: 'hidden' }}>
           <div className="mesh-bg" />
           <div className="grain" />
           <Suspense fallback={null}>

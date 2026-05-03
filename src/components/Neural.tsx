@@ -12,13 +12,13 @@ export default function Neural() {
     const cx = cv.getContext('2d')
     if (!cx) return
 
-    let W = 0, H = 0, raf = 0
+    let W = 0, H = 0,raf =0
+    let paused = false
     let resizeTimer: ReturnType<typeof setTimeout>
 
     const resize = () => {
-      W = cv.width  = window.innerWidth
-      H = cv.height = window.innerHeight
-    }
+      W = cv.width = window.innerWidth
+      H = cv.height = window.innerHeight}
     resize()
 
     const debouncedResize = () => {
@@ -31,12 +31,16 @@ export default function Neural() {
     const pts = Array.from({ length: COUNT }, () => ({
       x: Math.random() * W, y: Math.random() * H,
       vx: (Math.random() - .5) * .2, vy: (Math.random() - .5) * .2,
-      r: Math.random() * 1.1 + .35, o: Math.random() * .25 + .06,
+      r: Math.random() * 1.1+ .35, o: Math.random() * .25 + .06,
     }))
 
     const DIST = Math.min(140, W * 0.15)
 
     const draw = () => {
+      if (paused) {raf = requestAnimationFrame(draw)
+        return
+      }
+
       cx.clearRect(0, 0, W, H)
       for (let i = 0; i < pts.length; i++) {
         const p = pts[i]
@@ -65,12 +69,25 @@ export default function Neural() {
     }
     draw()
 
+    // Pause when tab is hidden
+    const onVisibility = () => { paused = document.hidden }
+    document.addEventListener('visibilitychange', onVisibility)
+
+    // Pause when canvas is scrolled out of view
+    const obs = new IntersectionObserver(
+      ([e]) => { paused = !e.isIntersecting },
+      { threshold: 0 }
+    )
+    obs.observe(cv)
+
     return () => {
       cancelAnimationFrame(raf)
       clearTimeout(resizeTimer)
       window.removeEventListener('resize', debouncedResize)
+      document.removeEventListener('visibilitychange', onVisibility)
+      obs.disconnect()
     }
   }, [])
 
-  return <canvas ref={ref} id="neural-bg" aria-hidden="true" />
+  return<canvas ref={ref} id="neural-bg" aria-hidden="true" />
 }

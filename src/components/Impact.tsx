@@ -10,7 +10,7 @@ const BIG = [
     desc: 'Grew new user monthly acquisition by 79% at Eternal (Zomato), while maintaining a strong payback period. Owned strategy, capital allocation, and execution — end to end.',
   },
   {
-    to: 30, p: '$', s: 'M+', col: '#f59e0b', glow: 'rgba(245,158,11,0.09)',
+    to: 32, p: '$', s: 'M+', col: '#f59e0b', glow: 'rgba(245,158,11,0.09)',
     label: 'Incremental revenue generated',
     desc: 'Designed digital acquisition strategies at American Express targeting high-LTV segments across UK, Australia, Canada, and Japan using behavioural and geolocation signals.',
   },

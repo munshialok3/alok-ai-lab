@@ -12,7 +12,7 @@ const fd = (delay: number) => ({
 
 const TICKER = [
   { label: 'New user growth',   val: '+79% monthly',   color: '#4f8ef7' },
-  { label: 'Revenue generated', val: '$30M+',           color: '#f59e0b' },
+  { label: 'Revenue generated', val: '$32M+',           color: '#f59e0b' },
   { label: 'Conversion uplift', val: '+60%',            color: '#10b981' },
   { label: 'OTR improvement',   val: '+29%',            color: '#8b5cf6' },
   { label: 'Card acquisitions', val: '24K+',            color: '#4f8ef7' },
@@ -22,7 +22,7 @@ const TICKER = [
 
 const METRICS = [
   { to: 79,  p: '+', s: '%',  label: 'New user growth',   c: '#4f8ef7' },
-  { to: 30,  p: '$', s: 'M+', label: 'Revenue generated', c: '#f59e0b' },
+  { to: 32,  p: '$', s: 'M+', label: 'Revenue generated', c: '#f59e0b' },
   { to: 60,  p: '',  s: '%',  label: 'Conversion uplift', c: '#10b981' },
   { to: 29,  p: '+', s: '%',  label: 'OTR improvement',   c: '#8b5cf6' },
 ]
@@ -95,7 +95,7 @@ export default function Hero({ onResumeRequest }: { onResumeRequest: () => void 
           <TypeAnimation
             sequence={[
               'Grew new user monthly acquisition by 79%.',      2700,
-              'Generated $30M+ in incremental revenue.',        2700,
+              'Generated $32M+ in incremental revenue.',        2700,
               'Built WhatsApp infra for 9 accounts solo.',      2700,
               '+60% conversion uplift via experimentation.',    2700,
               'From IIT Kharagpur to the growth frontier.',     2700,

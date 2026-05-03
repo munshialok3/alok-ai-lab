@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 import ScrollToTop from './ScrollToTop'
 import CursorWrapper from '@/components/CursorWrapper'
+import SkipToContent from '@/components/SkipToContent'
 import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 
@@ -34,21 +35,40 @@ export const metadata: Metadata = {
     description: 'Scaled multi-million new users. $32M incr revenue. IIT Kharagpur. Gurugram.',
     images: ['/og-image.png'],
   },
-  alternates: { canonical: BASE_URL },
+  alternates: { canonical: '/' },
   robots: { index: true, follow: true },
 }
 
 const jsonLd = {
   '@context': 'https://schema.org',
-  '@type': 'Person',
-  name: 'Alok Munshi',
-  jobTitle: 'Senior Analyst — Growth & Retention',
-  worksFor: { '@type': 'Organization', name: 'Eternal (Zomato)' },
-  alumniOf: { '@type': 'CollegeOrUniversity', name: 'Indian Institute of Technology Kharagpur' },
-  url: BASE_URL,
-  sameAs: ['https://linkedin.com/in/munshialok','https://github.com/munshialok3'],
-  address: { '@type': 'PostalAddress', addressLocality: 'Gurugram', addressRegion: 'Haryana', addressCountry: 'IN' },
-  knowsAbout: ['Growth Strategy','Performance Marketing','Product Growth','A/B Testing','Cohort Analytics','User Acquisition','LTV Modelling','Cloudflare Workers','SQL','Python'],
+  '@graph': [
+    {
+      '@type': 'Person',
+      name: 'Alok Munshi',
+      jobTitle: 'Senior Analyst — Growth & Retention',
+      worksFor: { '@type': 'Organization', name: 'Eternal (Zomato)' },
+      alumniOf: { '@type': 'CollegeOrUniversity', name: 'Indian Institute of Technology Kharagpur' },
+      url: BASE_URL,
+      sameAs: ['https://linkedin.com/in/munshialok', 'https://github.com/munshialok3'],
+      address: { '@type': 'PostalAddress', addressLocality: 'Gurugram', addressRegion: 'Haryana', addressCountry: 'IN' },
+      knowsAbout: ['Growth Strategy', 'Performance Marketing', 'Product Growth', 'A/B Testing', 'Cohort Analytics', 'User Acquisition', 'LTV Modelling', 'Cloudflare Workers', 'SQL', 'Python'],},
+    {
+      '@type': 'SoftwareApplication',
+      name: 'WhatsApp Campaign Engine',
+      description: 'Zero-downtime campaign infrastructure across 9 WhatsApp Business accounts with auto-recovery in under 3 seconds.',
+      applicationCategory: 'BusinessApplication',
+      author: { '@type': 'Person', name: 'Alok Munshi' },
+      url: 'https://github.com/munshialok3/whatsapp-campaign-engine',
+    },
+    {
+      '@type': 'SoftwareApplication',
+      name: "Arjun's Money Diaries Engine",
+      description: 'Automated LinkedIn content pipeline using n8n, Claude AI, Telegram approval, and LinkedIn API.',
+      applicationCategory: 'BusinessApplication',
+      author: { '@type': 'Person', name: 'Alok Munshi' },
+      url: BASE_URL + '/money-diaries',
+    },
+  ],
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -61,19 +81,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-        <link rel="canonical" href={BASE_URL} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
       <body>
+        <SkipToContent />
         <ScrollToTop />
         <CursorWrapper />
         {children}
-        {/* Vercel Analytics — tracks page views, referrers, countries, devices */}
         <Analytics />
-        {/* Vercel Speed Insights — tracks Core Web Vitals for SEO health */}
         <SpeedInsights />
       </body>
     </html>

@@ -158,6 +158,21 @@ export default function Navbar({ onResumeRequest }: { onResumeRequest: () => voi
               </button>
             ))}
 
+            <a
+              href="/writing"
+              style={{
+                padding: '7px clamp(10px,1.2vw,15px)',
+                borderRadius: 100,
+                fontSize: 'clamp(11px,1.1vw,13px)', fontWeight: 500,
+                border: 'none', fontFamily: 'inherit',
+                color: 'rgba(232,237,245,0.45)',
+                background: 'transparent',
+                transition: 'all .2s', whiteSpace: 'nowrap',textDecoration: 'none',
+              }}
+            >
+              Writing
+            </a>
+
             <button
               onClick={() => { onResumeRequest(); track('resume_modal_opened', { source: 'navbar' }) }}
               className="btn-ghost"
@@ -248,6 +263,22 @@ export default function Navbar({ onResumeRequest }: { onResumeRequest: () => voi
                 {active === l.id ? `→ ${l.label}` : l.label}
               </button>
             ))}
+
+            <a
+              href="/writing"
+              style={{
+                display: 'block', width: '100%', textAlign: 'left',
+                padding: '16px 24px',
+                fontSize: 15, fontWeight: 500, fontFamily: 'inherit',
+                color: 'rgba(232,237,245,0.6)',
+                background: 'transparent',
+                borderBottom: '1px solid rgba(255,255,255,0.06)',
+                textDecoration: 'none',
+              }}
+            >
+              Writing
+            </a>
+
             <button
               onClick={() => { setMenuOpen(false); onResumeRequest(); track('resume_modal_opened', { source: 'mobile_menu' }) }}
               style={{

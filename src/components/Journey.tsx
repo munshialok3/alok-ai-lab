@@ -132,6 +132,9 @@ export default function Journey() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.38 }}
+            role="region"
+            aria-live="polite"
+            aria-label={`Details for ${STOPS[active].co}`}
           >
             <div className="card" style={{ height: '100%' }}>
               <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: `linear-gradient(90deg,transparent,${STOPS[active].col}70,transparent)` }} />

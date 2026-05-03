@@ -16,10 +16,10 @@ export default function ResumeGateModal({ open, onClose }: { open: boolean; onCl
   const [errMsg,   setErrMsg]   = useState('')
   const closeButtonRef = useRef<HTMLButtonElement>(null)
 
-  // Track modal open
-  useEffect(() => {
-    if (open) track('resume_modal_opened')
-  }, [open])
+  // // Track modal open
+  // useEffect(() => {
+  //   if (open) track('resume_modal_opened')
+  // }, [open])
 
   useEffect(() => {
     if (!open) return
@@ -206,6 +206,10 @@ export default function ResumeGateModal({ open, onClose }: { open: boolean; onCl
                     </button>
                     <p style={{ fontSize: 11, color: 'rgba(232,237,245,0.22)', textAlign: 'center', lineHeight: 1.6 }}>
                       Your details are only used to evaluate this request. No spam, ever.{' '}
+                      {/* <a href="/privacy" style={{ color: 'rgba(232,237,245,0.35)', textDecoration: 'underline' }}>Privacy policy</a> */}
+                    </p>
+                    <p style={{ fontSize: 11, color: 'rgba(232,237,245,0.22)', textAlign: 'center', lineHeight: 1.6 }}>
+                      {/* Your details are only used to evaluate this request. No spam, ever.{' '} */}
                       <a href="/privacy" style={{ color: 'rgba(232,237,245,0.35)', textDecoration: 'underline' }}>Privacy policy</a>
                     </p>
                   </div>

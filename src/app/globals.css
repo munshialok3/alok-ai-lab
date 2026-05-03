@@ -4,6 +4,7 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
 
+
 :root {
   --bg: #060810;
   --bg2: #0c1018;
@@ -13,8 +14,8 @@
   --green: #10b981;
   --amber: #f59e0b;
   --text: #e8edf5;
-  --muted: rgba(232,237,245,0.55);
-  --dim: rgba(232,237,245,0.42);
+  --muted: rgba(232,237,245,0.7);
+  --dim: rgba(232,237,245,0.55);
   --border: rgba(255,255,255,0.08);
   --border2: rgba(255,255,255,0.15);
   --surface: rgba(255,255,255,0.04);
@@ -57,9 +58,12 @@ body {
   .cur-dot, .cur-ring { display: none !important; }
 }
 
-/* Desktop only: hide system cursor */
+/* Desktop only: hide system cursor (except for users who need it) */
 @media (hover: hover) and (pointer: fine) {
   *, a, button { cursor: none !important; }
+}
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: reduce) {
+  *, a, button { cursor: auto !important; }
 }
 
 /* Scrollbar */
@@ -140,7 +144,7 @@ body {
 
 /* ── Typography ── */
 .font-display {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Syne', ui-sans-serif, system-ui, -apple-system, sans-serif;
   font-weight: 800;
   letter-spacing: -0.04em;
   line-height: 0.93;
@@ -326,6 +330,11 @@ a:focus-visible,
   outline-offset: 3px;
   border-radius: 100px;
 }
+.tilt-card:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 3px;
+  border-radius: clamp(14px, 1.8vw, 22px);
+}
 
 /* ── Navbar modal-hidden state (CSS class, not inline style) ── */
 nav.nav-modal-hidden {
@@ -406,4 +415,48 @@ nav.nav-modal-hidden {
 .copy-toast.show {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
+}
+
+/* ── Prose content (writing pages) ── */
+.prose-content h2 {
+  font-family: 'Syne', ui-sans-serif, system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(20px, 2.2vw, 24px);
+  color: #fff;
+  margin: clamp(32px, 4vh, 40px) 0 clamp(12px, 1.5vh, 16px);
+  letter-spacing: -0.02em;
+}
+.prose-content h3 {
+  font-family: 'Syne', ui-sans-serif, system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(16px, 1.8vw, 20px);
+  color: #fff;
+  margin: clamp(24px, 3vh, 32px) 0 clamp(8px, 1vh, 12px);
+}
+.prose-content p {
+  margin-bottom: clamp(16px, 2vh, 20px);
+}
+.prose-content strong {
+  color: rgba(232,237,245,0.9);
+  font-weight: 600;
+}
+.prose-content em {
+  color: rgba(232,237,245,0.6);
+}
+.prose-content code {
+  background: rgba(79,142,247,0.1);
+  border: 1px solid rgba(79,142,247,0.2);
+  padding: 2px 7px;
+  border-radius: 5px;
+  font-size: 0.9em;
+  color: #7aadff;
+}
+.prose-content a {
+  color: #4f8ef7;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.2s;
+}
+.prose-content a:hover {
+  color: #7aadff;
 }

@@ -1,17 +1,12 @@
 'use client'
 import { motion } from 'framer-motion'
-import { useState, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import { track } from '@vercel/analytics'
 
 const EMAILJS_PUBLIC_KEY  = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY  ?? ''
 const EMAILJS_SERVICE_ID  = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID  ?? ''
 const EMAILJS_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID ?? ''
-
-// ─── REPLACE THIS with your Google Calendar appointment link ───────────────
-// Go to calendar.google.com → click gear icon → Appointment schedule →
-// Create schedule → copy the booking URL and paste it here
 const CALENDAR_BOOKING_URL = 'https://cal.com/alok-munshi/quick-chat-with-alok'
-// ──────────────────────────────────────────────────────────────────────────
 
 const fv = { initial: { opacity: 0, y: 24 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true } }
 
@@ -50,11 +45,15 @@ export default function Contact() {
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
   const [ejsReady, setEjsReady] = useState(false)
   const [copied, setCopied] = useState(false)
+  const [cooldown, setCooldown] = useState(false)
+  const ejsLoading = useRef(false)
 
-  useEffect(() => {
+  const loadEmailJS = () => {
+    if (ejsReady || ejsLoading.current) return
     if (typeof window === 'undefined') return
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if ((window as any).emailjs) { setEjsReady(true); return }
+    ejsLoading.current = true
     const s = document.createElement('script')
     s.src = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js'
     s.onload = () => {
@@ -64,17 +63,19 @@ export default function Contact() {
     }
     s.onerror = () => {
       console.warn('EmailJS failed to load — direct send will be unavailable.')
-    }
+      ejsLoading.current = false}
     document.head.appendChild(s)
-  }, [])
+  }
 
   const ch = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setForm(p => ({ ...p, [e.target.name]: e.target.value }))
 
   const focusOn = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    loadEmailJS()
     e.target.style.borderColor = 'rgba(79,142,247,0.6)'
-    e.target.style.background  = 'rgba(79,142,247,0.04)'
+    e.target.style.background= 'rgba(79,142,247,0.04)'
   }
+
   const focusOff = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     e.target.style.borderColor = 'rgba(255,255,255,0.12)'
     e.target.style.background  = 'rgba(255,255,255,0.04)'
@@ -96,17 +97,19 @@ export default function Contact() {
   }
 
   const sendViaEmailJS = async () => {
-    if (!ejsReady || !canSend) return
+    if (!ejsReady || !canSend || cooldown) return
     setStatus('sending')
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       await (window as any).emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
         from_name: form.name, from_email: form.email,
-        phone: form.phone || 'Not provided',
+        phone: form.phone ||'Not provided',
         subject: form.subject, message: form.body,
       })
       setStatus('sent')
       setForm({ name: '', email: '', phone: '', subject: '', body: '' })
+      setCooldown(true)
+      setTimeout(() => setCooldown(false), 60000)
       track('contact_form_submitted')
     } catch {
       setStatus('error')
@@ -123,18 +126,17 @@ export default function Contact() {
       form.email ? `Email: ${form.email}` : '',
       form.phone ? `Phone / WhatsApp: ${form.phone}` : '',
     ].filter(Boolean).join('\n')
-    const sub = encodeURIComponent(form.subject || 'Reaching out from your portfolio')
+    const sub = encodeURIComponent(form.subject ||'Reaching out from your portfolio')
     window.location.href = `mailto:munshialok3@gmail.com?subject=${sub}&body=${encodeURIComponent(bodyText)}`
   }
 
-  const isDisabled = !canSend || status === 'sending' || status === 'sent'
+  const isDisabled = !canSend || status === 'sending' || status === 'sent' || cooldown
 
   return (
     <section id="contact" className="section layer">
       <div style={{ maxWidth: 'min(720px, 92vw)', margin: '0 auto' }}>
-
         {/* ── Header ── */}
-        <motion.div {...fv} transition={{ duration: 0.7 }} style={{ textAlign: 'center', marginBottom: 'clamp(36px,5vh,56px)' }}>
+        <motion.div {...fv} transition={{ duration: 0.7}} style={{ textAlign: 'center', marginBottom: 'clamp(36px,5vh,56px)' }}>
           <p className="eyebrow" style={{ justifyContent: 'center' }}>Let&apos;s connect</p>
           <h2 className="font-display" style={{
             fontSize: 'clamp(44px,8.5vw,100px)',
@@ -145,12 +147,11 @@ export default function Contact() {
           }}>
             Let&apos;s build<br />something<br />great.
           </h2>
-          <p className="text-body" style={{ margin: '0 auto clamp(10px,1.5vh,16px)', maxWidth: 520 }}>
+          <p className="text-body" style={{ margin: '0 auto clamp(10px,1.5vh,16px)', maxWidth: 520}}>
             I&apos;m a growth strategist who builds the infrastructure himself. If you&apos;re working on
             something ambitious — a hard scaling challenge, an ambitious product, or a team that needs
             both strategic thinking and technical execution — I&apos;d love to hear about it.
-          </p>
-          <p style={{ fontSize: 'clamp(12px,1.2vw,13px)', color: 'rgba(232,237,245,0.3)', fontStyle: 'italic' }}>
+          </p><p style={{ fontSize: 'clamp(12px,1.2vw,13px)', color: 'rgba(232,237,245,0.3)', fontStyle: 'italic' }}>
             Open to senior growth, product growth &amp; strategy roles — advisory, consulting, and collaborative builds.
           </p>
         </motion.div>
@@ -158,7 +159,6 @@ export default function Contact() {
         {/* ── Quick links ── */}
         <motion.div {...fv} transition={{ duration: 0.65, delay: 0.1 }}
           style={{ display: 'flex', gap: 'clamp(8px,1.5vw,12px)', justifyContent: 'center', flexWrap: 'wrap', marginBottom: 'clamp(40px,6vh,56px)', alignItems: 'center' }}>
-
           <a href="https://linkedin.com/in/munshialok" target="_blank" rel="noopener noreferrer" className="btn-primary"
             onClick={() => track('linkedin_clicked', { source: 'contact' })}>
             <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
@@ -166,7 +166,6 @@ export default function Contact() {
             </svg>
             Connect on LinkedIn
           </a>
-
           <a href="https://github.com/munshialok3" target="_blank" rel="noopener noreferrer" className="btn-ghost"
             onClick={() => track('github_clicked', { source: 'contact' })}>
             <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
@@ -174,8 +173,6 @@ export default function Contact() {
             </svg>
             GitHub
           </a>
-
-          {/* Email + inline copy icon */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             <a href="mailto:munshialok3@gmail.com" className="btn-ghost"
               onClick={() => track('email_direct_clicked')}>
@@ -214,7 +211,6 @@ export default function Contact() {
             flexWrap: 'wrap',
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-              {/* Calendar icon */}
               <div style={{
                 width: 44, height: 44, borderRadius: 12, flexShrink: 0,
                 background: 'rgba(79,142,247,0.12)',
@@ -276,7 +272,6 @@ export default function Contact() {
           <div className="card" style={{ position: 'relative', overflow: 'hidden' }}>
             <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: 'linear-gradient(90deg,transparent,rgba(79,142,247,0.55),transparent)' }} />
             <div style={{ position: 'absolute', top: -20, right: -20, width: 'min(200px,30vw)', height: 'min(200px,30vw)', borderRadius: '50%', background: 'radial-gradient(circle,rgba(79,142,247,0.05),transparent 70%)', pointerEvents: 'none' }} />
-
             <div className="p-card">
               <div style={{ marginBottom: 'clamp(20px,3vh,28px)' }}>
                 <p style={{ fontFamily: 'Syne, sans-serif', fontWeight: 700, fontSize: 'clamp(16px,1.8vw,20px)', color: '#fff', marginBottom: 6 }}>
@@ -287,7 +282,6 @@ export default function Contact() {
                   <strong style={{ color: 'rgba(232,237,245,0.6)' }}>Open in mail app</strong> to send from your own email client.
                 </p>
               </div>
-
               <div className="contact-row">
                 <Field>
                   <Label htmlFor="ct-name">Your name *</Label>
@@ -298,7 +292,6 @@ export default function Contact() {
                   <input id="ct-email" name="email" type="email" value={form.email} onChange={ch} onFocus={focusOn} onBlur={focusOff} placeholder="jane@company.com" style={inp} maxLength={254} autoComplete="email" />
                 </Field>
               </div>
-
               <div className="contact-row">
                 <Field>
                   <Label htmlFor="ct-phone">Phone / WhatsApp</Label>
@@ -309,7 +302,6 @@ export default function Contact() {
                   <input id="ct-subject" name="subject" value={form.subject} onChange={ch} onFocus={focusOn} onBlur={focusOff} placeholder="Growth role at [Company]" style={inp} maxLength={200} />
                 </Field>
               </div>
-
               <Field>
                 <Label htmlFor="ct-body">Message *</Label>
                 <textarea id="ct-body" name="body" value={form.body} onChange={ch} onFocus={focusOn} onBlur={focusOff}
@@ -365,10 +357,7 @@ export default function Contact() {
             {' · '}Form submissions are used only to respond to your enquiry.
           </p>
         </div>
-      </div>
-
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-      <div className={`copy-toast${copied ? ' show' : ''}`}>munshialok3@gmail.com copied!</div>
+      </div><div className={`copy-toast${copied ? ' show' : ''}`}>munshialok3@gmail.com copied!</div>
     </section>
   )
 }
