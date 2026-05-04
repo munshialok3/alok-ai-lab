@@ -19,37 +19,51 @@ export interface Episode {
 }
 
 function parseCSV(text: string): Record<string, string>[] {
-  const lines = text.split('\n')
-  if (lines.length < 2) return []
+  // Proper CSV parser that handles newlines inside quoted fields
+  const rows: string[][] = []
+  let currentRow: string[] = []
+  let currentField = ''
+  let inQuotes = false
 
-  const parseRow = (line: string): string[] => {
-    const result: string[] = []
-    let current = ''
-    let inQuotes = false
-    for (let i = 0; i < line.length; i++) {
-      const ch = line[i]
-      if (ch === '"') {
-        if (inQuotes && line[i + 1] === '"') { current += '"'; i++ }
-        else inQuotes = !inQuotes
-      } else if (ch === ',' && !inQuotes) {
-        result.push(current); current = ''
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i]
+    const next = text[i + 1]
+
+    if (ch === '"') {
+      if (inQuotes && next === '"') {
+        currentField += '"'
+        i++
       } else {
-        current += ch
+        inQuotes = !inQuotes
       }
+    } else if (ch === ',' && !inQuotes) {
+      currentRow.push(currentField)
+      currentField = ''
+    } else if((ch === '\n' || ch === '\r') && !inQuotes) {
+      if (ch === '\r' && next === '\n') i++
+      currentRow.push(currentField)
+      if (currentRow.some(v => v.trim() !== '')) rows.push(currentRow)
+      currentRow = []
+      currentField = ''
+    } else {
+      currentField += ch
     }
-    result.push(current)
-    return result
   }
 
-  const headers = parseRow(lines[0])
-  return lines.slice(1)
-    .filter(l => l.trim())
-    .map(line => {
-      const values = parseRow(line)
-      const obj: Record<string, string> = {}
-      headers.forEach((h, i) => { obj[h.trim()] = (values[i] || '').trim() })
-      return obj
-    })
+  // Flush last field/row
+  if (currentField !== '' || currentRow.length > 0) {
+    currentRow.push(currentField)
+    if (currentRow.some(v => v.trim() !== '')) rows.push(currentRow)
+  }
+
+  if (rows.length < 2) return []
+
+  const headers = rows[0]
+  return rows.slice(1).map(values => {
+    const obj: Record<string, string> = {}
+    headers.forEach((h, i) => { obj[h.trim()] = (values[i] || '').trim() })
+    return obj
+  })
 }
 
 function toLinkedInUrl(raw: string): string {
@@ -80,7 +94,6 @@ export async function getEpisodes(): Promise<{ episodes: Episode[]; error: boole
     const rows = parseCSV(csv)
     const episodes = rows
       .filter(r => r.Status?.toLowerCase() === 'posted')
-      // .filter(r => true)
       .map((r): Episode => {
         const episodeNumber = parseInt((r.Episode_No || '').replace(/\D/g, '')) || 0
         const title = r.Title || ''
