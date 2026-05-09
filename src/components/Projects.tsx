@@ -31,7 +31,7 @@ const PROJ = [
     id: 'amd', icon: '🤖', name: "Arjun's Money Diaries Engine",
     tagline: 'Automated LinkedIn content pipeline — AI writes, you approve with one word, it posts',
     status: 'LIVE', sc: '#4f8ef7', ac: '#4f8ef7', featured: false,
-    stack: ['n8n', 'Claude AI', 'Telegram Bot', 'LinkedIn API', 'Google Sheets'],
+    stack: ['GitHub Actions', 'Gemini + Groq', 'Cloudflare Workers', 'Telegram Bot', 'LinkedIn API', 'Google Sheets'],
     metrics: [{ v: '44', l: 'Episodes' }, { v: '48h', l: 'Auto-cycle' }, { v: '1 word', l: 'To approve' }, { v: '~$0', l: 'Infra cost' }],
     desc: 'A fully automated LinkedIn content engine for a serialised personal finance series. Claude writes every episode, a quality check validates it, you approve from Telegram with one word — APPROVE, REJECT, REGENERATE, or EDIT. It posts to LinkedIn, tracks analytics, and queues the next draft automatically.',
     points: [

@@ -307,6 +307,9 @@ export default function Contact() {
                 <textarea id="ct-body" name="body" value={form.body} onChange={ch} onFocus={focusOn} onBlur={focusOff}
                   rows={5} placeholder="Tell me about what you're working on, the challenge you're facing, or the role you have in mind..."
                   style={{ ...inp, resize: 'vertical', minHeight: 120, lineHeight: 1.6 }} maxLength={2000} />
+                  <p style={{ fontSize: 11, color: 'rgba(232,237,245,0.25)', textAlign: 'right', marginTop: 4 }}>
+                    {form.body.length}/2000
+                  </p>
               </Field>
 
               {status === 'sent' && (

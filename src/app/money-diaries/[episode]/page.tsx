@@ -7,7 +7,8 @@ interface Props {
   params: { episode: string }
 }
 
-export const revalidate = 60
+// Published episodes never change — no need to revalidate every 60s
+export const revalidate = 3600
 
 export async function generateStaticParams() {
   const { episodes } = await getEpisodes()
@@ -24,13 +25,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: `Ep ${ep.episodeNumber}: ${ep.title}`,
       description: ep.hookLine || ep.concept,
-      type: 'article',},
+      type: 'article',
+    },
   }
 }
 
 export default async function EpisodePage({ params }: Props) {
   const ep = await getEpisodeBySlug(params.episode)
   if (!ep) notFound()
+
+  // Load all episodes to build prev/next navigation
+  const { episodes } = await getEpisodes()
+  // Episodes are sorted newest-first from getEpisodes — sort ascending for prev/next logic
+  const sorted = [...episodes].sort((a, b) => a.episodeNumber - b.episodeNumber)
+  const currentIndex = sorted.findIndex(e => e.slug === ep.slug)
+  const prevEp = currentIndex > 0 ? sorted[currentIndex - 1] : null
+  const nextEp = currentIndex < sorted.length - 1 ? sorted[currentIndex + 1] : null
 
   const col = getEpisodeColor(ep.episodeNumber)
   const num = ep.episodeNumber.toString().padStart(2, '0')
@@ -63,7 +73,8 @@ export default async function EpisodePage({ params }: Props) {
         color: '#e8edf5',
         fontFamily: "'DM Sans', system-ui, -apple-system, sans-serif",
       }}>
-        <article style={{ padding: 'clamp(60px,8vw,100px) clamp(20px,5vw,40px) clamp(48px,6vw,80px)', maxWidth: 680, margin: '0 auto' }}><Link href="/money-diaries" style={{
+        <article style={{ padding: 'clamp(60px,8vw,100px) clamp(20px,5vw,40px) clamp(48px,6vw,80px)', maxWidth: 680, margin: '0 auto' }}>
+          <Link href="/money-diaries" style={{
             display: 'inline-flex', alignItems: 'center', gap: 6,
             fontSize: 13, color: 'rgba(232,237,245,0.4)',
             textDecoration: 'none', marginBottom: 44,
@@ -84,7 +95,8 @@ export default async function EpisodePage({ params }: Props) {
               </span>
               <span style={{ fontSize: 11, color: 'rgba(232,237,245,0.35)' }}>
                 {ep.readingTime}
-              </span>{ep.postedDate && (
+              </span>
+              {ep.postedDate && (
                 <>
                   <span style={{ width: 1, height: 12, background: 'rgba(255,255,255,0.1)' }} />
                   <span style={{ fontSize: 11, color: 'rgba(232,237,245,0.35)' }}>
@@ -92,7 +104,9 @@ export default async function EpisodePage({ params }: Props) {
                   </span>
                 </>
               )}
-            </div><h1 style={{
+            </div>
+
+            <h1 style={{
               fontFamily: 'Syne, sans-serif', fontWeight: 800,
               fontSize: 'clamp(28px,5vw,44px)', letterSpacing: '-0.03em',
               lineHeight: 1.15, color: '#fff', marginBottom: 14,
@@ -105,7 +119,8 @@ export default async function EpisodePage({ params }: Props) {
                 fontSize: 'clamp(14px,1.4vw,16px)',
                 color: 'rgba(232,237,245,0.55)',
                 lineHeight: 1.7, fontWeight: 300, fontStyle: 'italic',
-                marginBottom: 16,}}>
+                marginBottom: 16,
+              }}>
                 &ldquo;{ep.hookLine}&rdquo;
               </p>
             )}
@@ -114,13 +129,9 @@ export default async function EpisodePage({ params }: Props) {
               {ep.concept && (
                 <span style={{
                   display: 'inline-block',
-                  padding: '3px 10px',
-                  borderRadius: 100,
-                  fontSize: 10,
-                  fontWeight: 600,
-                  background: `${col}12`,
-                  border: `1px solid ${col}28`,
-                  color: col,
+                  padding: '3px 10px', borderRadius: 100,
+                  fontSize: 10, fontWeight: 600,
+                  background: `${col}12`, border: `1px solid ${col}28`, color: col,
                 }}>
                   {ep.concept}
                 </span>
@@ -128,16 +139,16 @@ export default async function EpisodePage({ params }: Props) {
               {ep.character && (
                 <span style={{
                   display: 'inline-block',
-                  padding: '3px 10px',
-                  borderRadius: 100,
-                  fontSize: 10,
-                  fontWeight: 500,
+                  padding: '3px 10px', borderRadius: 100,
+                  fontSize: 10, fontWeight: 500,
                   background: 'rgba(255,255,255,0.04)',
                   border: '1px solid rgba(255,255,255,0.08)',
                   color: 'rgba(232,237,245,0.55)',
-                }}>ft. {ep.character}
+                }}>
+                  ft. {ep.character}
                 </span>
-              )}</div>
+              )}
+            </div>
           </header>
 
           {/* Engagement strip */}
@@ -173,12 +184,11 @@ export default async function EpisodePage({ params }: Props) {
           }} />
 
           {/* Post text */}
-          {ep.postText? (
+          {ep.postText ? (
             <div style={{
               fontSize: 'clamp(15px,1.4vw,17px)',
               color: 'rgba(232,237,245,0.75)',
-              lineHeight: 1.85,
-              fontWeight: 300,
+              lineHeight: 1.85, fontWeight: 300,
               whiteSpace: 'pre-wrap',
               marginBottom: 'clamp(32px,4vw,48px)',
             }}>
@@ -186,11 +196,10 @@ export default async function EpisodePage({ params }: Props) {
             </div>
           ) : (
             <div style={{
-              padding: 'clamp(32px,4vw,48px)20px',
+              padding: 'clamp(32px,4vw,48px) 20px', // ← BUG FIX: space added
               background: 'rgba(255,255,255,0.02)',
               border: '1px solid rgba(255,255,255,0.05)',
-              borderRadius: 16,
-              textAlign: 'center',
+              borderRadius: 16, textAlign: 'center',
               marginBottom: 'clamp(32px,4vw,48px)',
             }}>
               <p style={{ fontSize: 14, color: 'rgba(232,237,245,0.4)', fontStyle: 'italic' }}>
@@ -250,6 +259,52 @@ export default async function EpisodePage({ params }: Props) {
               More episodes →
             </Link>
           </div>
+
+          {/* Prev / Next episode navigation */}
+          {(prevEp || nextEp) && (
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: prevEp && nextEp ? '1fr 1fr' : '1fr',
+              gap: 12,
+              marginBottom: 'clamp(32px,4vw,48px)',
+            }}>
+              {prevEp && (
+                <Link href={`/money-diaries/${prevEp.slug}`} style={{
+                  display: 'flex', flexDirection: 'column', gap: 4,
+                  padding: '16px 20px', borderRadius: 14,
+                  background: 'rgba(255,255,255,0.03)',
+                  border: '1px solid rgba(255,255,255,0.07)',
+                  textDecoration: 'none',
+                  transition: 'border-color .2s, background .2s',
+                }}>
+                  <span style={{ fontSize: 10, color: 'rgba(232,237,245,0.3)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+                    ← Previous
+                  </span>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: '#e8edf5', lineHeight: 1.3 }}>
+                    Ep {prevEp.episodeNumber}: {prevEp.title}
+                  </span>
+                </Link>
+              )}
+              {nextEp && (
+                <Link href={`/money-diaries/${nextEp.slug}`} style={{
+                  display: 'flex', flexDirection: 'column', gap: 4, alignItems: 'flex-end',
+                  padding: '16px 20px', borderRadius: 14,
+                  background: 'rgba(255,255,255,0.03)',
+                  border: '1px solid rgba(255,255,255,0.07)',
+                  textDecoration: 'none',
+                  transition: 'border-color .2s, background .2s',
+                  textAlign: 'right',
+                }}>
+                  <span style={{ fontSize: 10, color: 'rgba(232,237,245,0.3)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+                    Next →
+                  </span>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: '#e8edf5', lineHeight: 1.3 }}>
+                    Ep {nextEp.episodeNumber}: {nextEp.title}
+                  </span>
+                </Link>
+              )}
+            </div>
+          )}
 
           {/* Footer nav */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

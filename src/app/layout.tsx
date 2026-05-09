@@ -63,7 +63,7 @@ const jsonLd = {
     {
       '@type': 'SoftwareApplication',
       name: "Arjun's Money Diaries Engine",
-      description: 'Automated LinkedIn content pipeline using n8n, Claude AI, Telegram approval, and LinkedIn API.',
+      description: 'Automated LinkedIn content pipeline using GitHub Actions, Gemini AI, Cloudflare Workers, Telegram approval, and LinkedIn API.',
       applicationCategory: 'BusinessApplication',
       author: { '@type': 'Person', name: 'Alok Munshi' },
       url: BASE_URL + '/money-diaries',
