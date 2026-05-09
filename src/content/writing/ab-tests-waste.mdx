@@ -1,0 +1,65 @@
+---
+title: "Why Most A/B Tests Are a Waste of Time"
+description: "I've run over 12 global campaigns with rigorous experimentation. Most A/B tests I see in the wild are structured to produce noise, not signal."
+date: "2026-07-01"
+tags: ["growth", "experimentation", "data"]
+published: false
+---
+
+## The uncomfortable truth about experimentation
+
+Most A/B tests tell you nothing.
+
+Not because the teams running them are incompetent. Because the tests are structured in ways that make meaningful signal nearly impossible to extract.
+
+I've run experimentation programmes across global markets at American Express — 12+ simultaneous campaigns, rigorous test design, real statistical discipline. I've also seen what passes for A/B testing at most companies. The gap is significant.
+
+Here's what goes wrong, and why it matters.
+
+## Problem 1: The sample size is always wrong
+
+Most teams decide to run a test, set it live, and check results after a week. If one variant is ahead, they call it.
+
+This is not how statistics works.
+
+Before you run any test, you need to know three things: the minimum effect size you care about detecting, your baseline conversion rate, and the traffic you expect. From those three numbers you can calculate the sample size required to have any confidence in your result.
+
+If you don't do this calculation, you are essentially running a random number generator and calling the output a business decision.
+
+At AmEx, we calculated required sample sizes before every test went live. Sometimes the answer was uncomfortable — we needed six weeks of traffic, not one. Most teams won't wait six weeks. So they run underpowered tests and make confident decisions from noise.
+
+## Problem 2: Testing the wrong variable
+
+The second failure mode is testing surface-level changes when the real leverage is upstream.
+
+Teams spend enormous energy testing button colours, headline wording, image variants. Sometimes these matter. More often, the variable that actually drives conversion is something like offer structure, audience segmentation, or channel timing — and nobody's testing those because they're harder to set up.
+
+I ran a test at AmEx where the hypothesis was that a different value proposition for a specific card product would outperform the default. Not a headline change. A fundamentally different angle on why someone should want the product. That test produced a 60% conversion uplift. No button colour test has ever come close.
+
+The question to ask before designing any test: if this variant wins, what do I actually learn? If the answer is "one colour performs better than another colour on this button," that's almost certainly not the highest-leverage experiment you could be running.
+
+## Problem 3: Peeking
+
+This one is almost universal. A test goes live, results start coming in, and every day someone checks whether it's significant yet. The moment it crosses 95% confidence, they stop the test and declare a winner.
+
+The problem is that p-values fluctuate. If you check significance repeatedly during a test, you will eventually see a significant result by chance — even if there is no real effect. This is called the peeking problem, and it inflates your false positive rate dramatically.
+
+The fix is simple: define your stopping criteria before you start. Either a fixed sample size or a fixed time horizon. Then don't look at statistical significance until you hit it. This requires discipline that most organisations don't have, because there's always pressure to call results early.
+
+## Problem 4: Not running tests long enough to capture the full effect
+
+Short tests miss weekly cycles. A test that runs Monday to Friday will systematically miss weekend behaviour. A test that runs for two weeks will miss end-of-month purchase patterns.
+
+The standard advice is to run tests for at least two full business cycles. Most teams run tests until they get bored or until someone senior asks for results.
+
+## What good experimentation actually looks like
+
+It's slower than most teams want. It requires saying "we don't have a result yet" when people want answers. It requires running fewer tests more rigorously rather than many tests loosely.
+
+The payoff is that when you do call a result, you can trust it. The 60% uplift we measured was real — it held in production and it compounded across markets.
+
+Most A/B test results don't hold in production. They were noise all along.
+
+Run fewer tests. Design them properly. Wait for the sample size. Don't peek.
+
+It's less exciting than shipping something every week. It's also the only way to actually learn anything.
