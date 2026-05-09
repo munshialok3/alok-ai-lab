@@ -138,6 +138,18 @@ export default function Contact() {
         {/* ── Header ── */}
         <motion.div {...fv} transition={{ duration: 0.7}} style={{ textAlign: 'center', marginBottom: 'clamp(36px,5vh,56px)' }}>
           <p className="eyebrow" style={{ justifyContent: 'center' }}>Let&apos;s connect</p>
+            <div style={{
+              display: 'inline-flex', alignItems: 'center', gap: 7,
+              background: 'rgba(16,185,129,0.08)',
+              border: '1px solid rgba(16,185,129,0.25)',
+              borderRadius: 100, padding: '6px 14px',
+              marginBottom: 20,
+            }}>
+              <span className="live-dot" style={{ background: '#10b981' }} />
+              <span style={{ fontSize: 12, fontWeight: 600, color: '#10b981', letterSpacing: '0.04em' }}>
+                Open to new opportunities
+              </span>
+            </div>
           <h2 className="font-display" style={{
             fontSize: 'clamp(44px,8.5vw,100px)',
             letterSpacing: '-0.045em', lineHeight: 0.92,

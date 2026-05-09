@@ -36,7 +36,7 @@ export default function About() {
           <motion.div {...fv} transition={{ duration: 0.7 }}>
             <p className="eyebrow">The person behind the metrics</p>
             <h2 className="font-display h-xl grad-white" style={{ marginBottom: 'clamp(18px,3vh,28px)' }}>
-              I think in<br />systems.
+              I build what<br />I can&apos;t find.
             </h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(14px,2vh,20px)' }}>
               <p className="text-body" style={{ maxWidth: 460 }}>
@@ -134,7 +134,7 @@ export default function About() {
                   Currently exploring
                 </p>
                 <p style={{ fontSize: 'clamp(11px,1.2vw,13px)', color: 'rgba(232,237,245,0.52)', fontWeight: 300 }}>
-                  AI-native growth infrastructure · next Himalayan trek · and what comes after Zomato.
+                  AI-native growth infrastructure · next Himalayan trek · and what I build next.
                 </p>
               </div>
             </motion.div>

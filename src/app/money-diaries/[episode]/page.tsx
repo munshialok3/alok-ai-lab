@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { getEpisodeBySlug, getEpisodes, getEpisodeColor } from '@/lib/money-diaries'
+import CopyLinkButton from './CopyLinkButton'
 
 interface Props {
   params: { episode: string }
@@ -244,6 +245,7 @@ export default async function EpisodePage({ params }: Props) {
                 LinkedIn link not yet available
               </span>
             )}
+            <CopyLinkButton />
             <Link
               href="/money-diaries"
               style={{

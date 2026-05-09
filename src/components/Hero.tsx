@@ -94,10 +94,10 @@ export default function Hero({ onResumeRequest }: { onResumeRequest: () => void 
         }}>
           <TypeAnimation
             sequence={[
-              'Grew new user monthly acquisition by 79%.',      2700,
-              'Generated $32M+ in incremental revenue.',        2700,
+              'I build the infrastructure others wait for.',    2700,
               'Built WhatsApp infra for 9 accounts solo.',      2700,
-              '+60% conversion uplift via experimentation.',    2700,
+              'Strategy without execution is just theory.',     2700,
+              'Generated $32M+ in incremental revenue.',        2700,
               'From IIT Kharagpur to the growth frontier.',     2700,
             ]}
             speed={50}
@@ -106,7 +106,7 @@ export default function Hero({ onResumeRequest }: { onResumeRequest: () => void 
           />
         </motion.div>
 
-        {/* CTA buttons — now includes Resume download */}
+        {/* CTA buttons */}
         <motion.div {...fd(0.78)} style={{
           display: 'flex', gap: 'clamp(8px,1.5vw,14px)',
           justifyContent: 'center', flexWrap: 'wrap',
@@ -115,8 +115,12 @@ export default function Hero({ onResumeRequest }: { onResumeRequest: () => void 
           <button className="btn-primary" onClick={() => go('projects')}>
             See my work
           </button>
-          <button className="btn-ghost" onClick={() => go('journey')}>
-            My journey →
+          <button
+            onClick={() => go('contact')}
+            className="btn-primary"
+            style={{ background: 'transparent', border: '1px solid rgba(79,142,247,0.4)', color: '#7aadff' }}
+          >
+            Let&apos;s connect
           </button>
           <button
             onClick={() => { onResumeRequest(); track('resume_modal_opened', { source: 'hero' }) }}

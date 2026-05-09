@@ -253,7 +253,7 @@ export default function Projects() {
           </h2>
           <p className="text-body" style={{ maxWidth: 480 }}>
             I don&apos;t just strategise — I build the infrastructure. Solo, fast, at near-zero cost.
-            Two of these run in production at Zomato and AmEx today.
+            One runs in production at Zomato today. Two were built internally at Zomato and AmEx.
           </p>
         </motion.div>
 
