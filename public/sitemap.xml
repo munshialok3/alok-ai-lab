@@ -18,4 +18,35 @@
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
+  <url>
+    <loc>https://alok-munshi-portfolio.vercel.app/writing/automation-philosophy</loc>
+    <lastmod>2026-04-25</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://alok-munshi-portfolio.vercel.app/writing/experimentation-lessons-amex</loc>
+    <lastmod>2026-04-28</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://alok-munshi-portfolio.vercel.app/writing/growth-is-not-performance-marketing</loc>
+    <lastmod>2026-05-01</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://alok-munshi-portfolio.vercel.app/writing/why-i-build</loc>
+    <lastmod>2026-05-03</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://alok-munshi-portfolio.vercel.app/writing/ab-tests-waste</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.6</priority>
+  </url>
+</urlset>
 </urlset>

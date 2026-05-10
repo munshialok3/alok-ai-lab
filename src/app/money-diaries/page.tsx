@@ -133,7 +133,7 @@ export default async function MoneyDiariesPage() {
             </span>
             <span style={{ width: 1, height: 14, background: 'rgba(79,142,247,0.3)', flexShrink: 0 }} />
             <span style={{ fontSize: 12, color: 'rgba(232,237,245,0.45)', fontWeight: 300 }}>
-              Gemini AI writes each episode → quality check → one-word Telegram approval → auto-posts to LinkedIn → appears here within 60 seconds.
+              Claude API writes each episode → quality check → one-word Telegram approval → auto-posts to LinkedIn → appears here within 60 seconds.
             </span>
           </div>
 
@@ -162,7 +162,7 @@ export default async function MoneyDiariesPage() {
         {/* Footer */}
         <div style={{ padding: '28px 40px', borderTop: '1px solid rgba(255,255,255,0.04)', textAlign: 'center' }}>
           <p style={{ fontSize: 11, color: 'rgba(232,237,245,0.18)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-            Alok Munshi · Powered by GitHub Actions + Gemini AI · Auto-updates every 60s
+            Alok Munshi · Powered by GitHub Actions + Claude API · Auto-updates every 60s
           </p>
         </div>
       </div>

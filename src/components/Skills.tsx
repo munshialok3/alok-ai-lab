@@ -17,7 +17,8 @@ const ENGINEERING = [
   { skill: 'Cloudflare Workers',       ctx: 'WhatsApp Campaign Engine — production infra at near-zero cost' },
   { skill: 'API Integration',          ctx: 'Meta Graph API · Sensor Tower API · WhatsApp Business API' },
   { skill: 'System Design',            ctx: 'Proxy architecture · KV caching · audit logging · alerting' },
-  { skill: 'Next.js / React',          ctx: 'This portfolio · AI Resume Builder (in progress)' },
+  { skill: 'Next.js / React',          ctx: 'This portfolio ' },
+  { skill: 'Claude API / Anthropic',   ctx: 'Arjun\'s Money Diaries Engine — production content pipeline' },
 ]
 
 // Tools grouped by category
@@ -40,7 +41,7 @@ const TOOL_GROUPS = [
   {
     label: 'Productivity & Infra',
     col: '#8b5cf6',
-    tools: ['Google Sheets', 'Cloudflare', 'Vercel'],
+    tools: ['Google Sheets', 'Cloudflare', 'Vercel', 'Claude API', 'Google Cloud'],
   },
 ]
 

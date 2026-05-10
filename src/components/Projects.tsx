@@ -31,7 +31,7 @@ const PROJ = [
     id: 'amd', icon: '🤖', name: "Arjun's Money Diaries Engine",
     tagline: 'Automated LinkedIn content pipeline — AI writes, you approve with one word, it posts',
     status: 'LIVE', sc: '#4f8ef7', ac: '#4f8ef7', featured: false,
-    stack: ['GitHub Actions', 'Gemini + Groq', 'Cloudflare Workers', 'Telegram Bot', 'LinkedIn API', 'Google Sheets'],
+    stack: ['GitHub Actions', 'Claude API + Groq', 'Cloudflare Workers', 'Telegram Bot', 'LinkedIn API', 'Google Sheets'],
     metrics: [{ v: '44', l: 'Episodes' }, { v: '48h', l: 'Auto-cycle' }, { v: '1 word', l: 'To approve' }, { v: '~$0', l: 'Infra cost' }],
     desc: 'A fully automated LinkedIn content engine for a serialised personal finance series. Claude writes every episode, a quality check validates it, you approve from Telegram with one word — APPROVE, REJECT, REGENERATE, or EDIT. It posts to LinkedIn, tracks analytics, and queues the next draft automatically.',
     points: [
@@ -53,7 +53,7 @@ const PROJ = [
     id: 'intel', icon: '📊', name: 'Competitive Intel Dashboard',
     tagline: 'Real-time app store intelligence replacing manual weekly reporting — at Zomato',
     status: 'BUILT · INTERNAL', sc: '#f59e0b', ac: '#f59e0b', featured: false,
-    stack: ['Python', 'Sensor Tower API', 'Google Sheets', 'Airflow', 'Google Data Studio'],
+    stack: ['Python', 'Sensor Tower API', 'Google Sheets', 'Airflow', 'Looker Studio'],
     metrics: [{ v: 'Live', l: 'Rankings' }, { v: 'Daily', l: 'Auto-report' }, { v: '20+', l: 'Stakeholders' }, { v: '0', l: 'Manual pulls' }],
     desc: 'Built at Zomato to replace a slow, manual weekly competitive reporting process with a live intelligence system. Tracks competitor app rankings, install trends, and keyword movements in real-time via Sensor Tower API — served automatically to cross-functional stakeholders and leadership, every morning.',
     points: [
@@ -75,8 +75,8 @@ const PROJ = [
     tagline: 'Product × channel targeting, dynamic offer logic and real-time segmentation — at AmEx',
     status: 'BUILT · INTERNAL', sc: '#8b5cf6', ac: '#8b5cf6', featured: false,
     stack: ['Python', 'SQL', 'Hive', 'Internal AmEx Stack'],
-    metrics: [{ v: '24K+', l: 'Acquisitions' }, { v: '4', l: 'Markets' }, { v: '$30M+', l: 'Revenue' }, { v: '+11%', l: 'ROI lift' }],
-    desc: 'Built at American Express to give the marketing team real-time control over acquisition targeting. Enabled product × channel segmentation, dynamic offer randomisation, and last-mile targeting logic — without engineering dependency. Contributed directly to $30M+ incremental revenue across UK, Australia, Canada, and Japan.',
+    metrics: [{ v: '24K+', l: 'Acquisitions' }, { v: '4', l: 'Markets' }, { v: '$32M+', l: 'Revenue' }, { v: '+11%', l: 'ROI lift' }],
+    desc: 'Built at American Express to give the marketing team real-time control over acquisition targeting. Enabled product × channel segmentation, dynamic offer randomisation, and last-mile targeting logic — without engineering dependency. Contributed directly to $32M+ incremental revenue across UK, Australia, Canada, and Japan.',
     points: [
       'Product × channel level segmentation — target specific card × digital channel combinations in real-time',
       'Dynamic offer randomisation for multivariate testing across 12+ global campaigns simultaneously',

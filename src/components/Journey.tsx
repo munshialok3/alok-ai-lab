@@ -33,7 +33,7 @@ const STOPS = [
     current: false,
     sub: '$32M revenue · 24K+ acquisitions · UK · Australia · Canada · Japan',
     desc: 'Joined AmEx straight out of IIT and owned precision digital acquisition across four global markets. The work was equal parts strategy and engineering — designing targeting logic using geolocation and behavioural signals, running multivariate experiments, and building interfaces that gave non-technical marketers real-time control over campaign logic.',
-    highlight: 'Built a Decision Management Interface enabling product × channel targeting, dynamic offer randomisation, and last-mile segmentation without engineering dependency. Added an anti-gaming detection layer that blocked promotional abuse and improved campaign ROI by 11%. Delivered 60% conversion uplift across 12+ global campaigns. Contributed to $30M+ incremental revenue across UK, Australia, Canada, and Japan.',
+    highlight: 'Built a Decision Management Interface enabling product × channel targeting, dynamic offer randomisation, and last-mile segmentation without engineering dependency. Added an anti-gaming detection layer that blocked promotional abuse and improved campaign ROI by 11%. Delivered 60% conversion uplift across 12+ global campaigns. Contributed to $32M+ incremental revenue across UK, Australia, Canada, and Japan.',
     tags: ['Data Science', 'Experimentation', 'Global Markets', 'AmEx', 'Builder'],
   },
   {
